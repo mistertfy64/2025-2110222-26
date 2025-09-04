@@ -1,2 +1,3 @@
-# 2025-2110222-26
-Working repository for Chulalongkorn University's 2025 offering of 2110222's Group 26's final project: เสก AI ใน 2 Week.
+<p align="center" width="100%">
+  <img src="https://storage.mistertfy64.com/2025211022226.png">
+</p>
