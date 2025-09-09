@@ -31,10 +31,13 @@ async function sendMessage() {
 }
 
 function createMessageHTML(message, type) {
+  const entry = document.createElement("div");
+  entry.classList.add("entry");
+  const avatar = createAvatar(type);
   const article = document.createElement("article");
-  const span = document.createElement("span");
-  span.innerText = message;
-  article.appendChild(span);
+  const messageContent = document.createElement("span");
+  messageContent.innerText = message;
+  article.appendChild(messageContent);
   article.classList.add("message");
   switch (type) {
     case "self": {
@@ -46,7 +49,16 @@ function createMessageHTML(message, type) {
       break;
     }
   }
-  return article;
+  entry.appendChild(avatar);
+  entry.appendChild(article);
+  return entry;
+}
+
+function createAvatar(type) {
+  const avatar = document.createElement("div");
+  avatar.classList.add("avatar");
+  avatar.classList.add(`avatar--${type}`);
+  return avatar;
 }
 
 function createMessageObject() {

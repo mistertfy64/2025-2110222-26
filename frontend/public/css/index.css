@@ -1,3 +1,8 @@
+:root {
+  --color-self: #00e700;
+  --color-miku: #3aaeb5;
+}
+
 body {
   width: 100vw;
   height: 100vh;
@@ -5,15 +10,82 @@ body {
   font-family: monospace;
 }
 
+.entry {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.message {
+  padding: 8px;
+  border-radius: 16px;
+  margin: 8px 0;
+  width: fit-content;
+}
+
+#message-log {
+  height: 80vh;
+  margin-bottom: 4px;
+}
+
 .message--self {
-  text-align: right;
+  text-align: left;
+  background-color: var(--color-self);
+  color: #000000;
 }
 
 .message--response {
   text-align: left;
+  background-color: var(--color-miku);
+  color: #ffffff;
+}
+
+#conversation-area {
+  display: flex;
+  flex-direction: column;
 }
 
 #sending-area {
-  position: absolute;
-  bottom: 5%;
+  height: 5%;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  margin-right: 8px;
+  border: 4px solid black;
+}
+
+.avatar--self {
+  background-image: url("../assets/images/self.png");
+  background-size: 36px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.avatar--response {
+  background-image: url("../assets/images/SixBFDI.png");
+  background-size: 36px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+#sending-area {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+#sending-area #send-message {
+  width: 10%;
+}
+
+#sending-area #message {
+  width: 85%;
+}
+
+main {
+  width: 70%;
+  margin: auto;
 }
