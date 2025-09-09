@@ -4,7 +4,7 @@
   "description": "Chat with Hatsune Miku! Wow! (Submission for an university assignment)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --watch ./src/server.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/mistertfy64/2025-2110222-26/issues"
   },
-  "homepage": "https://github.com/mistertfy64/2025-2110222-26#readme"
+  "homepage": "https://github.com/mistertfy64/2025-2110222-26#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
 }

@@ -1,0 +1,19 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  font-family: monospace;
+}
+
+.message--self {
+  text-align: right;
+}
+
+.message--response {
+  text-align: left;
+}
+
+#sending-area {
+  position: absolute;
+  bottom: 5%;
+}
