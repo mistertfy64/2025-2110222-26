@@ -22,8 +22,12 @@ async function interact(userMessage) {
 
   const data = await response.json();
 
-  const reply = data?.choices?.[0]?.message?.content;
+  if (data?.choices?.[0]?.finish_reason === "error") {
+    console.error("Error talking to OpenRouter:", error);
+    return "(error while generating response)";
+  }
 
+  const reply = data?.choices?.[0]?.message?.content;
   return reply;
 }
 
