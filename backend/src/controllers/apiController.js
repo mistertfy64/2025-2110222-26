@@ -34,8 +34,7 @@ export const addMessage = async (req, res) => {
 
     res.status(200).json({
       user: userMessage,
-      reply: reply,
-      timestamp: timestamp
+      reply: reply
     });
   } catch (error) {
     console.error("Error talking to OpenRouter:", error);
