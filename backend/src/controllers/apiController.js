@@ -30,9 +30,12 @@ export const addMessage = async (req, res) => {
     const reply =
       data?.choices?.[0]?.message?.content || "No reply from model.";
 
+    const timestamp = Date.now();
+
     res.status(200).json({
       user: userMessage,
-      reply: reply
+      reply: reply,
+      timestamp: timestamp
     });
   } catch (error) {
     console.error("Error talking to OpenRouter:", error);
