@@ -24,6 +24,9 @@ export const addMessage = async (req, res) => {
 };
 
 function validateMessage(message) {
+  if (typeof message !== "string") {
+    return false;
+  }
   const formatted = message.trim();
   return formatted.length > 0 && formatted.length <= MAXIMUM_LENGTH;
 }
