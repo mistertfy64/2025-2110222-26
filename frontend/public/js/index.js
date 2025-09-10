@@ -1,5 +1,6 @@
 const messageLog = document.getElementById("message-log");
 const sendMessageButton = document.getElementById("send-message");
+const MAXIMUM_LENGTH = 1024;
 
 // FIXME: temporary
 const origin = window.location.origin.substring(
@@ -98,7 +99,7 @@ function formatToTimeOfDay(timestamp) {
 
 function validateMessage(message) {
   const formatted = message.trim();
-  return formatted.length > 0;
+  return formatted.length > 0 && formatted.length <= MAXIMUM_LENGTH;
 }
 
 sendMessageButton.addEventListener("click", handleSendingMessage);
