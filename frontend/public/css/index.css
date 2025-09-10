@@ -10,6 +10,11 @@ body {
   font-family: monospace;
 }
 
+main {
+  width: 70%;
+  margin: auto;
+}
+
 .entry {
   display: flex;
   flex-direction: row;
@@ -85,7 +90,8 @@ body {
   width: 85%;
 }
 
-main {
-  width: 70%;
-  margin: auto;
+.timestamp {
+  opacity: 0.5;
+  font-size: smaller;
+  margin-left: 4px;
 }

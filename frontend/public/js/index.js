@@ -34,6 +34,23 @@ function createMessageHTML(message, type) {
   const entry = document.createElement("div");
   entry.classList.add("entry");
   const avatar = createAvatar(type);
+  const article = createMessageSemanticHTML(message, type);
+  const time = createTimestamp();
+  entry.appendChild(avatar);
+  entry.appendChild(article);
+  entry.appendChild(time);
+  return entry;
+}
+
+function createAvatar(type) {
+  const avatar = document.createElement("div");
+  avatar.classList.add("avatar");
+  avatar.classList.add(`avatar--${type}`);
+  return avatar;
+}
+
+// TODO: Rename this function
+function createMessageSemanticHTML(message, type) {
   const article = document.createElement("article");
   const messageContent = document.createElement("span");
   messageContent.innerText = message;
@@ -49,16 +66,7 @@ function createMessageHTML(message, type) {
       break;
     }
   }
-  entry.appendChild(avatar);
-  entry.appendChild(article);
-  return entry;
-}
-
-function createAvatar(type) {
-  const avatar = document.createElement("div");
-  avatar.classList.add("avatar");
-  avatar.classList.add(`avatar--${type}`);
-  return avatar;
+  return article;
 }
 
 function createMessageObject() {
@@ -66,6 +74,22 @@ function createMessageObject() {
   const textarea = document.getElementById("message");
   object.message = textarea.value;
   return object;
+}
+
+function createTimestamp() {
+  const timestamp = new Date();
+  const time = document.createElement("span");
+  time.classList.add("timestamp");
+  time.innerText = formatToTimeOfDay(timestamp);
+  return time;
+}
+
+function formatToTimeOfDay(timestamp) {
+  const hh = timestamp.getHours().toString().padStart(2, "0");
+  const mm = timestamp.getMinutes().toString().padStart(2, "0");
+  const ss = timestamp.getSeconds().toString().padStart(2, "0");
+  const time = `${hh}:${mm}:${ss}`;
+  return time;
 }
 
 sendMessageButton.addEventListener("click", handleSendingMessage);
