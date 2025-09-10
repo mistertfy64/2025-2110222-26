@@ -1,41 +1,32 @@
-import "dotenv/config";
+import { interact } from "../services/llm.js";
 
-// import fetch from "node-fetch";
+const MAXIMUM_LENGTH = 1024;
 
 export const addMessage = async (req, res) => {
+  const userMessage = req.body.message;
+
+  if (!validateMessage(userMessage)) {
+    console.warn("User tried to send empty or too long message.");
+    res.status(400).json({ error: "Message is empty or too long." });
+    return;
+  }
+
   try {
-    const userMessage = req.body.message;
-
-    // Send conversation request to OpenRouter
-    const response = await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": process.env.OPENROUTER_API_KEY,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash-lite", // you can change model here
-          messages: [
-            { role: "system", content: "You are a helpful assistant." },
-            { role: "user", content: userMessage }
-          ]
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    const reply =
-      data?.choices?.[0]?.message?.content || "No reply from model.";
-
+    const reply = await interact(userMessage);
     res.status(200).json({
       user: userMessage,
-      reply: reply
+      reply: reply ?? "(no response)"
     });
   } catch (error) {
     console.error("Error talking to OpenRouter:", error);
     res.status(500).json({ error: "Failed to talk to AI model" });
   }
 };
+
+function validateMessage(message) {
+  if (typeof message !== "string") {
+    return false;
+  }
+  const formatted = message.trim();
+  return formatted.length > 0 && formatted.length <= MAXIMUM_LENGTH;
+}

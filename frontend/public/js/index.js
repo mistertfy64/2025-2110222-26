@@ -1,5 +1,6 @@
 const messageLog = document.getElementById("message-log");
 const sendMessageButton = document.getElementById("send-message");
+const MAXIMUM_LENGTH = 1024;
 
 // FIXME: temporary
 const origin = window.location.origin.substring(
@@ -9,6 +10,10 @@ const origin = window.location.origin.substring(
 
 async function handleSendingMessage() {
   const message = document.getElementById("message").value;
+  if (!validateMessage(message)) {
+    console.warn("No message supplied. Not sending request.");
+    return;
+  }
   addMessage(message, "self");
   sendMessage();
 }
@@ -90,6 +95,11 @@ function formatToTimeOfDay(timestamp) {
   const ss = timestamp.getSeconds().toString().padStart(2, "0");
   const time = `${hh}:${mm}:${ss}`;
   return time;
+}
+
+function validateMessage(message) {
+  const formatted = message.trim();
+  return formatted.length > 0 && formatted.length <= MAXIMUM_LENGTH;
 }
 
 sendMessageButton.addEventListener("click", handleSendingMessage);
