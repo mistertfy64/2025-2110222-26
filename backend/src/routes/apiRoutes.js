@@ -1,4 +1,3 @@
-// backend/src/routes/apiRoutes.js
 import express from "express";
 const router = express.Router();
 
@@ -14,6 +13,9 @@ router.post("/sessions/:sessionId/messages", chatController.saveMessageHandler);
 
 // Get all messages for a session
 router.get("/sessions/:sessionId/messages", chatController.getSessionMessagesHandler);
+
+// List all session
+router.get("/sessions", chatController.listSessionsHandler);
 
 // Existing single endpoint that integrates saving + LLM reply
 router.post("/message", chatController.addMessageAndGetReplyHandler);

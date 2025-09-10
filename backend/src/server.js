@@ -1,6 +1,5 @@
-// backend/server.js
 import app from "./app.js";
-import connectDB from "./src/services/db.js";
+import connectDB from "./services/db.js";
 
 const PORT = process.env.PORT || 39399;
 

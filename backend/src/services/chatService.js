@@ -1,11 +1,8 @@
-// backend/src/services/chatService.js
 import { v4 as uuidv4 } from "uuid";
 import Session from "../models/sessionModel.js";
 import Message from "../models/messageModel.js";
 
-/**
- * Create a new session and return its sessionId
- */
+// Create a new session and return its sessionId
 export async function createSession(initialMeta = {}) {
   const sessionId = uuidv4();
   const session = new Session({ sessionId, meta: initialMeta });
@@ -13,10 +10,9 @@ export async function createSession(initialMeta = {}) {
   return sessionId;
 }
 
-/**
- * Add a message to a session. If session doesn't exist, optionally create it (false by default).
- * Returns the saved message document.
- */
+
+// Add a message to a session. If session doesn't exist, optionally create it (false by default).
+// Returns the saved message document.
 export async function addMessageToSession(sessionId, role, content, { createIfNotExist = false } = {}) {
   if (!sessionId) throw new Error("sessionId required");
   if (createIfNotExist) {
@@ -37,19 +33,27 @@ export async function addMessageToSession(sessionId, role, content, { createIfNo
   return msg.toObject();
 }
 
-/**
- * Get all messages for a session, sorted by creation time ascending.
- * You can add pagination with skip/limit if histories get large.
- */
+
+// Get all messages for a session, sorted by creation time ascending.
+// You can add pagination with skip/limit if histories get large.
 export async function getSessionMessages(sessionId) {
   return Message.find({ sessionId }).sort({ createdAt: 1 }).lean();
 }
 
-/**
- * Optional helper: delete a session and its messages
- */
+
+//Optional helper: delete a session and its messages
 export async function deleteSession(sessionId) {
   await Message.deleteMany({ sessionId });
   await Session.deleteOne({ sessionId });
   return true;
+}
+
+
+// Ensure a session exists, create if not.
+export async function ensureSession(sessionId) {
+  return Session.findOneAndUpdate(
+    { sessionId },
+    { $setOnInsert: { sessionId } },
+    { upsert: true, new: true }
+  );
 }

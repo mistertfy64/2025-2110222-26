@@ -1,4 +1,3 @@
-// backend/src/services/db.js
 import mongoose from "mongoose";
 import "dotenv/config";
 
@@ -9,10 +8,9 @@ if (!MONGO_URI) {
 
 export default async function connectDB() {
   try {
-    await mongoose.connect(MONGO_URI, {
-      // mongoose v7+ has sensible defaults; you can pass options if needed
-    });
+    await mongoose.connect(MONGO_URI, {});
     console.log("MongoDB connected");
+    
   } catch (err) {
     console.error("MongoDB connection error:", err);
     throw err;
