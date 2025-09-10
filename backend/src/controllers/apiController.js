@@ -6,7 +6,7 @@ export const addMessage = async (req, res) => {
   const userMessage = req.body.message;
 
   if (!validateMessage(userMessage)) {
-    console.warn("User tried to send empty message.");
+    console.warn("User tried to send empty or too long message.");
     res.status(400).json({ error: "Message is empty or too long." });
     return;
   }
