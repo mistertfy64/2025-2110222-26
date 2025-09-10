@@ -27,7 +27,7 @@ async function sendMessage() {
     body: JSON.stringify(createMessageObject())
   });
   const response = await result.json();
-  addMessage(response.message, "response");
+  addMessage(response.reply, "response");
 }
 
 function createMessageHTML(message, type) {
