@@ -83,6 +83,7 @@ function renderSessionsList() {
 
     const mark = document.createElement("div");
     mark.classList.add("circle");
+    mark.style.marginLeft = "4px";
     mark.style.backgroundColor = s.color || "#000000";
     title.appendChild(mark);
 

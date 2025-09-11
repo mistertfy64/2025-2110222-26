@@ -100,6 +100,9 @@ body {
 .session-title {
   font-weight: 600;
   font-size: 13px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 .session-meta {
   font-size: 12px;
@@ -253,4 +256,10 @@ body {
   font-size: 14px;
   padding: 24px;
   text-align: center;
+}
+
+.circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
 }
