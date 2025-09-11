@@ -20,6 +20,9 @@ function initializeModificationDialog(dataJSON) {
   document
     .getElementById("modification-menu__close-button")
     .addEventListener("click", destroyModificationDialog);
+  document
+    .getElementById("modification-menu__delete-text")
+    .addEventListener("click", openSessionDeletionMenu);
 }
 
 // TODO: Add feedback on fetch success/fail (Do something with `result`)
@@ -56,5 +59,49 @@ function destroyModificationDialog() {
     .getElementById("modification-menu__close-button")
     .removeEventListener("click", destroyModificationDialog);
   const dialog = document.getElementById("modification-menu");
+  dialog.close();
+}
+
+async function openSessionDeletionMenu() {
+  // this comes first, so we know what we are deleting.
+  const sessionIDToDelete = document.getElementById(
+    "modification-menu__session-to-change"
+  ).value;
+  document.getElementById("deletion-menu__session-to-delete").value =
+    sessionIDToDelete;
+  destroyModificationDialog();
+  const dialog = document.getElementById("deletion-menu");
+  dialog.showModal();
+  document
+    .getElementById("deletion-menu__close-button")
+    .addEventListener("click", destroyDeletionDialog);
+  document
+    .getElementById("deletion-menu__confirm-button")
+    .addEventListener("click", deleteSession);
+}
+
+// TODO: Add feedback on fetch success/fail (Do something with `result`)
+async function deleteSession() {
+  const sessionID = document.getElementById(
+    "deletion-menu__session-to-delete"
+  ).value;
+  const result = await fetch(`${API_BASE}/api/sessions/${sessionID}`, {
+    method: "DELETE"
+  });
+  destroyDeletionDialog();
+  // TODO: can we find a better way to do this as well
+  window.location.reload();
+}
+
+// This is here so no one DELETES a chat session info "on accident"
+function destroyDeletionDialog() {
+  document
+    .getElementById("deletion-menu__confirm-button")
+    .addEventListener("remove", deleteSession);
+  document
+    .getElementById("deletion-menu__close-button")
+    .removeEventListener("click", destroyDeletionDialog);
+  document.getElementById("deletion-menu__session-to-delete").value = "";
+  const dialog = document.getElementById("deletion-menu");
   dialog.close();
 }

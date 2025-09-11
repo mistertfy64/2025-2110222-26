@@ -53,6 +53,25 @@
     </div>
   </dialog>
 
+  <dialog id="deletion-menu">
+    <div>
+      <input type="hidden" id="deletion-menu__session-to-delete">
+      <div style="text-align: center;">
+        Are you sure you want to delete this chat?
+        <br>
+        This can't be undone!
+      </div>
+      <div style="display:flex;justify-content: space-between;flex-direction: row;">
+        <div style="text-align: left;">
+          <button id="deletion-menu__close-button" value="cancel" formmethod="dialog">Cancel</button>
+        </div>
+        <div style="text-align: right;">
+          <button id="deletion-menu__confirm-button" value="default">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
 
   <script src="./js/modification-menu.js"></script>
   <script src="./js/index.js"></script>

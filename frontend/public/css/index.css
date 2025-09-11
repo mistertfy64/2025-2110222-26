@@ -280,3 +280,9 @@ body {
   text-decoration: underline;
   cursor: pointer;
 }
+
+/* deletion menu */
+#deletion-menu {
+  background-color: #bb0000;
+  color: #ffffff;
+}
