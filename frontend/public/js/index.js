@@ -341,6 +341,10 @@ function formatToLocalDateTime(d) {
 }
 
 function formatToDuration(time) {
+  if (typeof time !== "number") {
+    // this particular string for consistency :)
+    return "some time";
+  }
   if (time < 1000) {
     return `${Math.floor(time)}ms`;
   }
