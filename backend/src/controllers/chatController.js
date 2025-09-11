@@ -134,6 +134,8 @@ export async function listSessionsHandler(req, res) {
       sessionId: s.sessionId,
       createdAt: s.createdAt,
       updatedAt: s.updatedAt,
+      name: s.name ?? "Unnamed chat",
+      color: s.color ?? "#1a1a1a",
       meta: s.meta
     }))
   );
