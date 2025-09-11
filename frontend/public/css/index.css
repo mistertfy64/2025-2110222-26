@@ -136,7 +136,7 @@ body {
 .entry {
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: center;
   gap: 8px;
   max-width: 80%;
 }
@@ -172,17 +172,23 @@ body {
 .timestamp {
   font-size: 12px;
   color: #5b6970;
+  position: relative;
   margin-left: 6px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
 }
 
 .timestamp__brief {
   opacity: 0.6;
   transition: opacity 250ms linear;
+  grid-area: 1 / 1 / 2 / 2;
 }
 
 .timestamp__detailed {
   opacity: 0;
   transition: opacity 250ms linear;
+  grid-area: 1 / 1 / 2 / 2;
 }
 
 .timestamp:hover .timestamp__brief {
