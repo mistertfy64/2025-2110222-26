@@ -14,6 +14,9 @@ router.post("/sessions/:sessionId/messages", chatController.saveMessageHandler);
 // Change a session's info (e.g. name)
 router.put("/sessions/:sessionId", chatController.changeSessionDataHandler);
 
+// Delete a session
+router.delete("/sessions/:sessionId", chatController.deleteSessionHandler);
+
 // Get all messages for a session
 router.get(
   "/sessions/:sessionId/messages",

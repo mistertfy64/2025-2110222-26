@@ -1,5 +1,6 @@
 import * as chatService from "../services/chatService.js";
 import Session from "../models/sessionModel.js";
+import Message from "../models/messageModel.js";
 import { interact } from "../services/llm.js";
 
 const MAXIMUM_LENGTH = 1024;
@@ -139,4 +140,18 @@ export async function listSessionsHandler(req, res) {
       meta: s.meta
     }))
   );
+}
+
+export async function deleteSessionHandler(req, res) {
+  const target = req.params.sessionId;
+  if (!/[0-9a-f]{24}$/.test(target)) {
+    return res.status(400).json({ error: "Bad Request." });
+  }
+  const session = await Session.findOne({ sessionId: target });
+  if (!session) {
+    return res.status(404).json({ error: "Session not found." });
+  }
+  await Message.deleteMany({ sessionId: target });
+  await Session.deleteOne({ sessionId: target });
+  res.status(204).json({ message: "Session deleted." });
 }
