@@ -102,6 +102,15 @@ export async function changeSessionDataHandler(req, res) {
     return res.status(404).json({ error: "Session not found." });
   }
 
+  if (req.body.newName.length < 0 || req.body.newName.length > 48) {
+    return res.status(400).json({ error: "Invalid chat name." });
+  }
+
+  const COLOR_REGEX = /\#[0-9a-f]{6}$/;
+  if (!COLOR_REGEX.test(req.body.newColor)) {
+    return res.status(400).json({ error: "Invalid chat color." });
+  }
+
   session.name = req.body.newName;
   session.color = req.body.newColor;
 
