@@ -265,12 +265,25 @@ function createMessageBubble(msg, type) {
 
 function createTimestamp(messageObject) {
   const dateFallback = new Date();
+
+  if (roleToType(messageObject.role) === "self") {
+    return createSimpleTimestamp(messageObject);
+  }
+
   const timestampObject = document.createElement("div");
-  timestampObject.classList.add("timestamp");
+  timestampObject.classList.add("timestamp--complicated");
   const briefTimestamp = createBriefTimestamp(messageObject);
   const detailedTimestamp = createDetailedTimestamp(messageObject);
   timestampObject.appendChild(briefTimestamp, dateFallback);
   timestampObject.appendChild(detailedTimestamp, dateFallback);
+  return timestampObject;
+}
+
+function createSimpleTimestamp(messageObject, dateFallback = new Date()) {
+  const date = messageObject.createdAt ?? dateFallback;
+  const timestampObject = document.createElement("div");
+  timestampObject.classList.add("timestamp--simple");
+  timestampObject.innerText = formatToTimeOfDay(date);
   return timestampObject;
 }
 
@@ -312,6 +325,8 @@ function showEmptyState(text) {
 }
 
 function formatToTimeOfDay(date) {
+  const ISO8601_STRING = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/;
+  if (ISO8601_STRING.test(date)) date = new Date(date);
   const hh = date.getHours().toString().padStart(2, "0");
   const mm = date.getMinutes().toString().padStart(2, "0");
   const ss = date.getSeconds().toString().padStart(2, "0");
