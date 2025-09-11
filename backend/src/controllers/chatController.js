@@ -95,6 +95,20 @@ export async function addMessageAndGetReplyHandler(req, res) {
   }
 }
 
+export async function changeSessionDataHandler(req, res) {
+  const target = req.params.sessionId;
+  const session = await Session.findOne({ sessionId: target });
+  if (!session) {
+    return res.status(404).json({ error: "Session not found." });
+  }
+
+  session.name = req.body.newName;
+  session.color = req.body.newColor;
+
+  await session.save();
+  res.status(200).json({ message: "OK" });
+}
+
 export async function listSessionsHandler(req, res) {
   const sessions = await Session.find({}).sort({ updatedAt: -1 }).lean();
   return res.json(

@@ -11,8 +11,14 @@ router.post("/sessions", chatController.createSessionHandler);
 // Save a message to a session
 router.post("/sessions/:sessionId/messages", chatController.saveMessageHandler);
 
+// Change a session's info (e.g. name)
+router.put("/sessions/:sessionId", chatController.changeSessionDataHandler);
+
 // Get all messages for a session
-router.get("/sessions/:sessionId/messages", chatController.getSessionMessagesHandler);
+router.get(
+  "/sessions/:sessionId/messages",
+  chatController.getSessionMessagesHandler
+);
 
 // List all session
 router.get("/sessions", chatController.listSessionsHandler);
