@@ -32,9 +32,15 @@ export async function addMessageToSession(
     }
   }
 
-  const msg = new Message({ sessionId, role, content });
-  msg.timings.sent = sent ?? Date.now();
-  msg.timings.thinkingDuration = thinkingDuration;
+  const msg = new Message({
+    sessionId,
+    role,
+    content,
+    timings: {
+      sent: sent ?? Date.now(),
+      thinkingDuration: thinkingDuration ?? 0
+    }
+  });
   await msg.save();
   return msg.toObject();
 }
