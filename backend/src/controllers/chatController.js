@@ -109,6 +109,15 @@ export async function changeSessionDataHandler(req, res) {
   res.status(200).json({ message: "OK" });
 }
 
+export async function getSessionDataHandler(req, res) {
+  const target = req.params.sessionId;
+  const session = await Session.findOne({ sessionId: target });
+  if (!session) {
+    return res.status(404).json({ error: "Session not found." });
+  }
+  res.status(200).json(session);
+}
+
 export async function listSessionsHandler(req, res) {
   const sessions = await Session.find({}).sort({ updatedAt: -1 }).lean();
   return res.json(

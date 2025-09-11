@@ -20,6 +20,9 @@ router.get(
   chatController.getSessionMessagesHandler
 );
 
+// Get a session's data (e.g. name)
+router.get("/sessions/:sessionId", chatController.getSessionDataHandler);
+
 // List all session
 router.get("/sessions", chatController.listSessionsHandler);
 
