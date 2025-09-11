@@ -272,3 +272,11 @@ body {
   height: 12px;
   border-radius: 50%;
 }
+
+/* modification menu */
+#modification-menu__delete-text {
+  opacity: 0.3;
+  font-size: smaller;
+  text-decoration: underline;
+  cursor: pointer;
+}
