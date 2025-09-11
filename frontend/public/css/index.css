@@ -177,10 +177,12 @@ body {
 
 .timestamp__brief {
   opacity: 0.6;
+  transition: opacity 250ms linear;
 }
 
 .timestamp__detailed {
   opacity: 0;
+  transition: opacity 250ms linear;
 }
 
 .timestamp:hover .timestamp__brief {
