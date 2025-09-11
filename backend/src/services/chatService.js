@@ -10,10 +10,14 @@ export async function createSession(initialMeta = {}) {
   return sessionId;
 }
 
-
 // Add a message to a session. If session doesn't exist, optionally create it (false by default).
 // Returns the saved message document.
-export async function addMessageToSession(sessionId, role, content, { createIfNotExist = false } = {}) {
+export async function addMessageToSession(
+  sessionId,
+  role,
+  content,
+  { createIfNotExist = false, thinkingDuration = 0, sent = Date.now() } = {}
+) {
   if (!sessionId) throw new Error("sessionId required");
   if (createIfNotExist) {
     await Session.findOneAndUpdate(
@@ -28,11 +32,18 @@ export async function addMessageToSession(sessionId, role, content, { createIfNo
     }
   }
 
-  const msg = new Message({ sessionId, role, content });
+  const msg = new Message({
+    sessionId,
+    role,
+    content,
+    timings: {
+      sent: sent ?? Date.now(),
+      thinkingDuration: thinkingDuration ?? 0
+    }
+  });
   await msg.save();
   return msg.toObject();
 }
-
 
 // Get all messages for a session, sorted by creation time ascending.
 // You can add pagination with skip/limit if histories get large.
@@ -40,14 +51,12 @@ export async function getSessionMessages(sessionId) {
   return Message.find({ sessionId }).sort({ createdAt: 1 }).lean();
 }
 
-
 //Optional helper: delete a session and its messages
 export async function deleteSession(sessionId) {
   await Message.deleteMany({ sessionId });
   await Session.deleteOne({ sessionId });
   return true;
 }
-
 
 // Ensure a session exists, create if not.
 export async function ensureSession(sessionId) {

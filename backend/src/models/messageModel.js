@@ -6,12 +6,16 @@ const MessageSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["user", "assistant", "system"],
-      required: true,
+      required: true
     },
     content: { type: String, required: true, trim: true },
+    timings: {
+      sent: { type: Date },
+      thinkingDuration: { type: Number }
+    }
   },
   {
-    timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },
+    timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" }
   }
 );
 

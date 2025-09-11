@@ -83,7 +83,11 @@ function renderSessionsList() {
 
     const meta = document.createElement("div");
     meta.className = "session-meta";
-    meta.innerText = s.updatedAt ? formatToLocalDateTime(new Date(s.updatedAt)) : (s.createdAt ? formatToLocalDateTime(new Date(s.createdAt)) : "");
+    meta.innerText = s.updatedAt
+      ? formatToLocalDateTime(new Date(s.updatedAt))
+      : s.createdAt
+      ? formatToLocalDateTime(new Date(s.createdAt))
+      : "";
 
     li.appendChild(title);
     li.appendChild(meta);
@@ -116,7 +120,15 @@ async function createNewSession() {
     const data = await res.json();
     const sid = data.sessionId;
     // add to local cache (top)
-    sessionsCache = [{ sessionId: sid, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), meta: {} }, ...sessionsCache];
+    sessionsCache = [
+      {
+        sessionId: sid,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        meta: {}
+      },
+      ...sessionsCache
+    ];
     renderSessionsList();
     await selectSession(sid);
     messageInput.value = "";
@@ -133,7 +145,9 @@ async function fetchAndRenderHistory(sessionId) {
   showEmptyState("Loading conversation…");
 
   try {
-    const res = await fetch(`${API_BASE}/api/sessions/${encodeURIComponent(sessionId)}/messages`);
+    const res = await fetch(
+      `${API_BASE}/api/sessions/${encodeURIComponent(sessionId)}/messages`
+    );
     if (!res.ok) throw new Error("Failed to fetch messages");
     const payload = await res.json();
     const messages = payload.messages || [];
@@ -153,8 +167,7 @@ function renderMessages(messages = []) {
   }
 
   messages.forEach((m) => {
-    const type = roleToType(m.role);
-    appendMessageToLog(m.content, type, m.createdAt);
+    appendMessageToLog(m);
   });
 
   scrollToBottom();
@@ -208,20 +221,23 @@ async function handleSendClicked() {
   }
 }
 
-// UI helpers 
-function appendMessageToLog(text, type = "response", createdAt = null) {
-  const entry = createMessageHTML(text, type, createdAt);
+// UI helpers
+function appendMessageToLog(messageObject) {
+  const entry = createMessageHTML(messageObject);
   messageLog.appendChild(entry);
 }
 
-function createMessageHTML(message, type, createdAt) {
+function createMessageHTML(messageObject) {
+  const text = messageObject.content;
+  const type = roleToType(messageObject.role);
+
   const entry = document.createElement("div");
   entry.classList.add("entry");
   if (type === "self") entry.classList.add("entry--self");
 
   const avatar = createAvatar(type);
-  const article = createMessageBubble(message, type);
-  const time = createTimestamp(createdAt);
+  const article = createMessageBubble(text, type);
+  const time = createTimestamp(messageObject);
 
   entry.appendChild(avatar);
   entry.appendChild(article);
@@ -240,21 +256,71 @@ function createAvatar(type) {
 function createMessageBubble(msg, type) {
   const article = document.createElement("article");
   article.classList.add("message");
-  article.classList.add(type === "self" ? "message--self" : "message--response");
+  article.classList.add(
+    type === "self" ? "message--self" : "message--response"
+  );
   article.innerText = msg;
   return article;
 }
 
-function createTimestamp(createdAt) {
-  const ts = document.createElement("span");
-  ts.classList.add("timestamp");
+function createTimestamp(messageObject) {
+  const dateFallback = new Date();
+
+  if (roleToType(messageObject.role) === "self") {
+    return createSimpleTimestamp(messageObject);
+  }
+
+  const timestampObject = document.createElement("div");
+  timestampObject.classList.add("timestamp--complicated");
+  const briefTimestamp = createBriefTimestamp(messageObject, dateFallback);
+  const detailedTimestamp = createDetailedTimestamp(
+    messageObject,
+    dateFallback
+  );
+  timestampObject.appendChild(briefTimestamp);
+  timestampObject.appendChild(detailedTimestamp);
+  return timestampObject;
+}
+
+function createSimpleTimestamp(messageObject, dateFallback = new Date()) {
+  const date = messageObject.createdAt ?? dateFallback;
+  const timestampObject = document.createElement("div");
+  timestampObject.classList.add("timestamp--simple");
+  timestampObject.innerText = formatToTimeOfDay(date);
+  return timestampObject;
+}
+
+function createBriefTimestamp(messageObject, dateFallback = new Date()) {
+  const createdAt = messageObject.createdAt;
+  const briefTimestamp = document.createElement("span");
+  briefTimestamp.classList.add("timestamp__brief");
   if (createdAt) {
     const d = new Date(createdAt);
-    ts.innerText = formatToTimeOfDay(d);
+    briefTimestamp.innerText = formatToTimeOfDay(d);
   } else {
-    ts.innerText = formatToTimeOfDay(new Date());
+    briefTimestamp.innerText = formatToTimeOfDay(dateFallback);
   }
-  return ts;
+  return briefTimestamp;
+}
+
+function createDetailedTimestamp(messageObject, dateFallback = new Date()) {
+  const createdAt = messageObject.createdAt;
+  const detailedTimestamp = document.createElement("span");
+  const thinkingDuration = messageObject?.timings?.thinkingDuration;
+  detailedTimestamp.classList.add("timestamp__detailed");
+  if (createdAt) {
+    detailedTimestamp.innerText += formatToLocalDateTime(createdAt);
+  } else {
+    detailedTimestamp.innerText += formatToLocalDateTime(dateFallback);
+  }
+  detailedTimestamp.innerText += " (thought for ";
+  if (thinkingDuration) {
+    detailedTimestamp.innerText += formatToDuration(thinkingDuration);
+  } else {
+    detailedTimestamp.innerText += "some time";
+  }
+  detailedTimestamp.innerText += ")";
+  return detailedTimestamp;
 }
 
 function showEmptyState(text) {
@@ -262,6 +328,7 @@ function showEmptyState(text) {
 }
 
 function formatToTimeOfDay(date) {
+  if (typeof date === "string") date = new Date(date);
   const hh = date.getHours().toString().padStart(2, "0");
   const mm = date.getMinutes().toString().padStart(2, "0");
   const ss = date.getSeconds().toString().padStart(2, "0");
@@ -269,7 +336,19 @@ function formatToTimeOfDay(date) {
 }
 function formatToLocalDateTime(d) {
   if (!d) return "";
+  if (typeof date === "string") date = new Date(date);
   return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
+}
+
+function formatToDuration(time) {
+  if (typeof time !== "number") {
+    // this particular string for consistency :)
+    return "some time";
+  }
+  if (time < 1000) {
+    return `${Math.floor(time)}ms`;
+  }
+  return `${Math.floor(time / 1000)}s`;
 }
 
 function roleToType(role) {
@@ -291,8 +370,13 @@ function scrollToBottom() {
 }
 
 function escapeHtml(s) {
-  return (s || "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+  return (s || "").replace(
+    /[&<>"']/g,
+    (m) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[
+        m
+      ])
+  );
 }
-
 
 init();
