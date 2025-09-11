@@ -272,10 +272,13 @@ function createTimestamp(messageObject) {
 
   const timestampObject = document.createElement("div");
   timestampObject.classList.add("timestamp--complicated");
-  const briefTimestamp = createBriefTimestamp(messageObject);
-  const detailedTimestamp = createDetailedTimestamp(messageObject);
-  timestampObject.appendChild(briefTimestamp, dateFallback);
-  timestampObject.appendChild(detailedTimestamp, dateFallback);
+  const briefTimestamp = createBriefTimestamp(messageObject, dateFallback);
+  const detailedTimestamp = createDetailedTimestamp(
+    messageObject,
+    dateFallback
+  );
+  timestampObject.appendChild(briefTimestamp);
+  timestampObject.appendChild(detailedTimestamp);
   return timestampObject;
 }
 
