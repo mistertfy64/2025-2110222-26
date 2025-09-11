@@ -10,7 +10,6 @@ function validateMessage(message) {
   return formatted.length > 0 && formatted.length <= MAXIMUM_LENGTH;
 }
 
-
 export async function createSessionHandler(req, res) {
   try {
     const sessionId = await chatService.createSession();
@@ -20,7 +19,6 @@ export async function createSessionHandler(req, res) {
     return res.status(500).json({ error: "Failed to create session" });
   }
 }
-
 
 export async function saveMessageHandler(req, res) {
   try {
@@ -32,14 +30,20 @@ export async function saveMessageHandler(req, res) {
     if (!validateMessage(content)) {
       return res.status(400).json({ error: "Message empty or too long" });
     }
-    const saved = await chatService.addMessageToSession(sessionId, role, content, { createIfNotExist: true });
+    const saved = await chatService.addMessageToSession(
+      sessionId,
+      role,
+      content,
+      { createIfNotExist: true }
+    );
     return res.status(201).json(saved);
   } catch (err) {
     console.error("saveMessageHandler:", err);
-    return res.status(500).json({ error: err.message ?? "Failed to save message" });
+    return res
+      .status(500)
+      .json({ error: err.message ?? "Failed to save message" });
   }
 }
-
 
 export async function getSessionMessagesHandler(req, res) {
   try {
@@ -52,15 +56,12 @@ export async function getSessionMessagesHandler(req, res) {
   }
 }
 
-
 export async function addMessageAndGetReplyHandler(req, res) {
   try {
     let { sessionId, message } = req.body;
 
     if (!validateMessage(message)) {
-      return res
-        .status(400)
-        .json({ error: "Message empty or too long." });
+      return res.status(400).json({ error: "Message empty or too long." });
     }
 
     if (!sessionId) {
@@ -69,16 +70,22 @@ export async function addMessageAndGetReplyHandler(req, res) {
       await chatService.ensureSession(sessionId);
     }
 
+    const sentTimestamp = Date.now();
     await chatService.addMessageToSession(sessionId, "user", message, {
       createIfNotExist: true,
+      sent: sentTimestamp
     });
 
     const reply = await interact(message);
-
+    const replyTimestamp = Date.now();
     await chatService.addMessageToSession(
       sessionId,
       "assistant",
-      reply ?? "(no response)"
+      reply ?? "(no response)",
+      {
+        sent: replyTimestamp,
+        thinkingDuration: replyTimestamp - sentTimestamp
+      }
     );
 
     return res.status(200).json({ sessionId, reply });
@@ -90,5 +97,12 @@ export async function addMessageAndGetReplyHandler(req, res) {
 
 export async function listSessionsHandler(req, res) {
   const sessions = await Session.find({}).sort({ updatedAt: -1 }).lean();
-  return res.json(sessions.map(s => ({ sessionId: s.sessionId, createdAt: s.createdAt, updatedAt: s.updatedAt, meta: s.meta })));
+  return res.json(
+    sessions.map((s) => ({
+      sessionId: s.sessionId,
+      createdAt: s.createdAt,
+      updatedAt: s.updatedAt,
+      meta: s.meta
+    }))
+  );
 }
