@@ -169,7 +169,7 @@ body {
 }
 
 /* small timestamp */
-.timestamp {
+.timestamp--complicated {
   font-size: 12px;
   color: #5b6970;
   position: relative;
@@ -177,6 +177,14 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
+}
+
+.timestamp--simple {
+  font-size: 12px;
+  color: #5b6970;
+  position: relative;
+  margin-left: 6px;
+  opacity: 0.6;
 }
 
 .timestamp__brief {
@@ -191,11 +199,11 @@ body {
   grid-area: 1 / 1 / 2 / 2;
 }
 
-.timestamp:hover .timestamp__brief {
+.timestamp--complicated:hover .timestamp__brief {
   opacity: 0;
 }
 
-.timestamp:hover .timestamp__detailed {
+.timestamp--complicated:hover .timestamp__detailed {
   opacity: 0.6;
 }
 
