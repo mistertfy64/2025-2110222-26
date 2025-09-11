@@ -6,11 +6,10 @@ if (!MONGO_URI) {
   throw new Error("MONGODB_URI is not set in .env");
 }
 
-export default async function connectDB() {
+export default function connectDB() {
   try {
-    await mongoose.connect(MONGO_URI, {});
+    mongoose.connect(MONGO_URI, {});
     console.log("MongoDB connected");
-    
   } catch (err) {
     console.error("MongoDB connection error:", err);
     throw err;
