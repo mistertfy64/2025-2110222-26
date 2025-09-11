@@ -167,7 +167,6 @@ function renderMessages(messages = []) {
   }
 
   messages.forEach((m) => {
-    const type = roleToType(m.role);
     appendMessageToLog(m);
   });
 
@@ -230,7 +229,7 @@ function appendMessageToLog(messageObject) {
 
 function createMessageHTML(messageObject) {
   const text = messageObject.content;
-  const type = messageObject.type;
+  const type = roleToType(messageObject.role);
 
   const entry = document.createElement("div");
   entry.classList.add("entry");
@@ -291,7 +290,7 @@ function createBriefTimestamp(messageObject, dateFallback = new Date()) {
 function createDetailedTimestamp(messageObject, dateFallback = new Date()) {
   const createdAt = messageObject.createdAt;
   const detailedTimestamp = document.createElement("span");
-  const thinkingDuration = messageObject.timings.thinkingDuration;
+  const thinkingDuration = messageObject?.timings?.thinkingDuration;
   detailedTimestamp.classList.add("timestamp__detailed");
   if (createdAt) {
     detailedTimestamp.innerText += formatToLocalDateTime(createdAt);
