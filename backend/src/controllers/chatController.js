@@ -107,7 +107,7 @@ export async function changeSessionDataHandler(req, res) {
     return res.status(400).json({ error: "Invalid chat name." });
   }
 
-  const COLOR_REGEX = /\#[0-9a-f]{6}$/;
+  const COLOR_REGEX = /^\#[0-9a-f]{6}$/;
   if (!COLOR_REGEX.test(req.body.newColor)) {
     return res.status(400).json({ error: "Invalid chat color." });
   }
@@ -143,8 +143,10 @@ export async function listSessionsHandler(req, res) {
 }
 
 export async function deleteSessionHandler(req, res) {
+  const UUID_REGEX =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
   const target = req.params.sessionId;
-  if (!/[0-9a-f]{24}$/.test(target)) {
+  if (!UUID_REGEX.test(target)) {
     return res.status(400).json({ error: "Bad Request." });
   }
   const session = await Session.findOne({ sessionId: target });
