@@ -95,6 +95,15 @@ function renderSessionsList() {
       ? formatToLocalDateTime(new Date(s.createdAt))
       : "";
 
+    const modify = document.createElement("div");
+    modify.className = "session-modify-text";
+    modify.innerText = "Modify";
+    modify.setAttribute(
+      `onclick`,
+      `openSessionModificationMenu("${s.sessionId}")`
+    );
+    meta.appendChild(modify);
+
     li.appendChild(title);
     li.appendChild(meta);
 
