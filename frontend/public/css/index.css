@@ -9,8 +9,18 @@
 }
 
 /* reset / base */
-* { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: var(--app-bg); color: #0b1420; }
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial;
+  background: var(--app-bg);
+  color: #0b1420;
+}
 #app {
   max-width: var(--max-width);
   margin: 12px auto;
@@ -38,7 +48,7 @@ html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, "Se
   align-items: center;
   gap: 12px;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 .sidebar-header h1 {
   font-size: 18px;
@@ -47,7 +57,7 @@ html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, "Se
 .btn {
   background: transparent;
   color: var(--sidebar-text);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
@@ -79,10 +89,22 @@ html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, "Se
   transition: background-color 120ms;
   color: var(--sidebar-text);
 }
-.session-item:hover { background: rgba(255,255,255,0.02); }
-.session-item.active { background: rgba(255,255,255,0.04); border-left: 3px solid var(--color-miku); padding-left: 7px; }
-.session-title { font-weight: 600; font-size: 13px; }
-.session-meta { font-size: 12px; color: var(--muted); }
+.session-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+.session-item.active {
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--color-miku);
+  padding-left: 7px;
+}
+.session-title {
+  font-weight: 600;
+  font-size: 13px;
+}
+.session-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
 
 /* Main chat area */
 #main-chat {
@@ -133,7 +155,7 @@ html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, "Se
   width: fit-content;
   line-height: 1.25;
   word-break: break-word;
-  box-shadow: 0 2px 6px rgba(10,20,30,0.04);
+  box-shadow: 0 2px 6px rgba(10, 20, 30, 0.04);
 }
 
 .message--self {
@@ -148,10 +170,25 @@ html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, "Se
 
 /* small timestamp */
 .timestamp {
-  opacity: 0.6;
   font-size: 12px;
   color: #5b6970;
   margin-left: 6px;
+}
+
+.timestamp__brief {
+  opacity: 0.6;
+}
+
+.timestamp__detailed {
+  opacity: 0;
+}
+
+.timestamp:hover .timestamp__brief {
+  opacity: 0;
+}
+
+.timestamp:hover .timestamp__detailed {
+  opacity: 0.6;
 }
 
 /* avatars (keep your assets) */
@@ -162,10 +199,14 @@ html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, "Se
   background-size: cover;
   background-position: center;
   flex-shrink: 0;
-  border: 3px solid rgba(0,0,0,0.08);
+  border: 3px solid rgba(0, 0, 0, 0.08);
 }
-.avatar--self { background-image: url("../assets/images/self.png"); }
-.avatar--response { background-image: url("../assets/images/SixBFDI.png"); }
+.avatar--self {
+  background-image: url("../assets/images/self.png");
+}
+.avatar--response {
+  background-image: url("../assets/images/SixBFDI.png");
+}
 
 /* sending area */
 #sending-area {
