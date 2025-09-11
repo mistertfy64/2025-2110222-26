@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hatsune Miku Chat</title>
-  <link href="./css/index.css" rel="stylesheet">
+  <link href="./css/index.css" rel="stylesheet" />
 </head>
-
 <body>
-  Hatsune Miku Chat
-
-
-  <main>
-    <div id="conversation-area">
-      <div id="message-log">
+  <div id="app">
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <h1>Hatsune Miku Chat</h1>
+        <button id="new-chat" class="btn">+ New Chat</button>
       </div>
-      <div id="sending-area">
-        <input type="text" id="message"></input>
-        <br>
-        <button id="send-message">Send Message</button>
+
+      <div class="sidebar-body">
+        <h3>Sessions</h3>
+        <ul id="sessions-list" class="sessions-list"></ul>
       </div>
-    </div>
-  </main>
+    </aside>
+
+    <main id="main-chat">
+      <div id="conversation-area">
+        <div id="message-log" aria-live="polite"></div>
+
+        <div id="sending-area">
+          <input type="text" id="message" placeholder="Type a message..." autocomplete="off" />
+          <button id="send-message">Send</button>
+        </div>
+      </div>
+    </main>
+  </div>
 
   <script src="./js/index.js"></script>
-
 </body>
-
 </html>

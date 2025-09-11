@@ -1,97 +1,199 @@
 :root {
   --color-self: #00e700;
   --color-miku: #3aaeb5;
+  --sidebar-bg: #0f1722;
+  --sidebar-text: #e6eef2;
+  --muted: #99a0a6;
+  --app-bg: #f6f8fa;
+  --max-width: 1100px;
 }
 
-body {
-  width: 100vw;
-  height: 100vh;
+/* reset / base */
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: var(--app-bg); color: #0b1420; }
+#app {
+  max-width: var(--max-width);
+  margin: 12px auto;
+  height: calc(100vh - 24px);
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+}
+
+/* Sidebar */
+#sidebar {
+  width: 280px;
+  min-width: 220px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sidebar-header h1 {
+  font-size: 18px;
   margin: 0;
-  font-family: monospace;
+}
+.btn {
+  background: transparent;
+  color: var(--sidebar-text);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.sidebar-body {
+  padding: 8px;
+  overflow-y: auto;
+  flex: 1;
+}
+.sidebar-body h3 {
+  margin: 8px 4px;
+  color: var(--muted);
+  font-size: 13px;
 }
 
-main {
-  width: 70%;
-  margin: auto;
+/* session list */
+.sessions-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+.session-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 120ms;
+  color: var(--sidebar-text);
+}
+.session-item:hover { background: rgba(255,255,255,0.02); }
+.session-item.active { background: rgba(255,255,255,0.04); border-left: 3px solid var(--color-miku); padding-left: 7px; }
+.session-title { font-weight: 600; font-size: 13px; }
+.session-meta { font-size: 12px; color: var(--muted); }
+
+/* Main chat area */
+#main-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+#conversation-area {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(10, 20, 30, 0.06);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
+/* message log */
+#message-log {
+  padding: 18px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* entry: avatar + message + timestamp */
 .entry {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  margin: 4px 0;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 80%;
 }
 
+/* reverse for self messages */
+.entry.entry--self {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+/* message bubble */
 .message {
-  padding: 8px;
+  padding: 10px 14px;
   border-radius: 16px;
-  margin: 8px 0;
+  margin: 0;
   width: fit-content;
-}
-
-#message-log {
-  height: 80vh;
-  margin-bottom: 4px;
+  line-height: 1.25;
+  word-break: break-word;
+  box-shadow: 0 2px 6px rgba(10,20,30,0.04);
 }
 
 .message--self {
-  text-align: left;
   background-color: var(--color-self);
   color: #000000;
 }
 
 .message--response {
-  text-align: left;
   background-color: var(--color-miku);
   color: #ffffff;
 }
 
-#conversation-area {
-  display: flex;
-  flex-direction: column;
+/* small timestamp */
+.timestamp {
+  opacity: 0.6;
+  font-size: 12px;
+  color: #5b6970;
+  margin-left: 6px;
 }
 
-#sending-area {
-  height: 5%;
-}
-
+/* avatars (keep your assets) */
 .avatar {
   width: 40px;
   height: 40px;
-  margin-right: 8px;
-  border: 4px solid black;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  border: 3px solid rgba(0,0,0,0.08);
 }
+.avatar--self { background-image: url("../assets/images/self.png"); }
+.avatar--response { background-image: url("../assets/images/SixBFDI.png"); }
 
-.avatar--self {
-  background-image: url("../assets/images/self.png");
-  background-size: 36px;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-.avatar--response {
-  background-image: url("../assets/images/SixBFDI.png");
-  background-size: 36px;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
+/* sending area */
 #sending-area {
-  width: 100%;
   display: flex;
-  justify-content: space-between;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #eee;
+}
+#sending-area input[type="text"] {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+}
+#sending-area button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-miku);
+  color: white;
+  cursor: pointer;
 }
 
-#sending-area #send-message {
-  width: 10%;
-}
-
-#sending-area #message {
-  width: 85%;
-}
-
-.timestamp {
-  opacity: 0.5;
-  font-size: smaller;
-  margin-left: 4px;
+/* small util */
+.empty-state {
+  color: #6b7780;
+  font-size: 14px;
+  padding: 24px;
+  text-align: center;
 }

@@ -1,6 +1,7 @@
 {
   "name": "chat-with-hatsune-miku-backend",
   "version": "0.1.0-alpha",
+  "type": "module",
   "description": "Chat with Hatsune Miku! Wow! (Submission for an university assignment)",
   "main": "index.js",
   "scripts": {
@@ -19,6 +20,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mongoose": "^8.18.1",
+    "uuid": "^13.0.0"
   }
 }
