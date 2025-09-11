@@ -328,17 +328,15 @@ function showEmptyState(text) {
 }
 
 function formatToTimeOfDay(date) {
-  const ISO8601_STRING = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/;
-  if (ISO8601_STRING.test(date)) date = new Date(date);
+  if (typeof date === "string") date = new Date(date);
   const hh = date.getHours().toString().padStart(2, "0");
   const mm = date.getMinutes().toString().padStart(2, "0");
   const ss = date.getSeconds().toString().padStart(2, "0");
   return `${hh}:${mm}:${ss}`;
 }
 function formatToLocalDateTime(d) {
-  const ISO8601_STRING = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/;
   if (!d) return "";
-  if (ISO8601_STRING.test(d)) d = new Date(d);
+  if (typeof date === "string") date = new Date(date);
   return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
 }
 
