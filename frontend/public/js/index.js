@@ -78,8 +78,13 @@ function renderSessionsList() {
 
     const title = document.createElement("div");
     title.className = "session-title";
-    // show short label or time if no meta.title
-    title.innerText = s.meta?.title || `Chat — ${shortId(s.sessionId)}`;
+    // show name
+    title.innerText = s.name || `Unnamed Chat`;
+
+    const mark = document.createElement("div");
+    mark.classList.add("circle");
+    mark.style.backgroundColor = s.color || "#000000";
+    title.appendChild(mark);
 
     const meta = document.createElement("div");
     meta.className = "session-meta";
@@ -336,7 +341,7 @@ function formatToTimeOfDay(date) {
 }
 function formatToLocalDateTime(d) {
   if (!d) return "";
-  if (typeof date === "string") date = new Date(date);
+  if (typeof d === "string") d = new Date(d);
   return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
 }
 
