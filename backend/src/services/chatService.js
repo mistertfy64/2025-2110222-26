@@ -5,7 +5,12 @@ import Message from "../models/messageModel.js";
 // Create a new session and return its sessionId
 export async function createSession(initialMeta = {}) {
   const sessionId = uuidv4();
-  const session = new Session({ sessionId, meta: initialMeta });
+  const sessionName = `New chat on ${new Date().toISOString()}`;
+  const session = new Session({
+    sessionId,
+    meta: initialMeta,
+    name: sessionName
+  });
   await session.save();
   return sessionId;
 }
