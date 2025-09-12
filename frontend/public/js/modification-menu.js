@@ -97,7 +97,7 @@ async function deleteSession() {
 function destroyDeletionDialog() {
   document
     .getElementById("deletion-menu__confirm-button")
-    .addEventListener("remove", deleteSession);
+    .removeEventListener("click", deleteSession);
   document
     .getElementById("deletion-menu__close-button")
     .removeEventListener("click", destroyDeletionDialog);
