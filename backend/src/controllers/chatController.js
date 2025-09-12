@@ -97,26 +97,31 @@ export async function addMessageAndGetReplyHandler(req, res) {
 }
 
 export async function changeSessionDataHandler(req, res) {
-  const target = req.params.sessionId;
-  const session = await Session.findOne({ sessionId: target });
-  if (!session) {
-    return res.status(404).json({ error: "Session not found." });
+  try {
+    const target = req.params.sessionId;
+    const session = await Session.findOne({ sessionId: target });
+    if (!session) {
+      return res.status(404).json({ error: "Session not found." });
+    }
+
+    if (req.body.newName.length < 0 || req.body.newName.length > 48) {
+      return res.status(400).json({ error: "Invalid chat name." });
+    }
+
+    const COLOR_REGEX = /^\#[0-9a-f]{6}$/;
+    if (!COLOR_REGEX.test(req.body.newColor)) {
+      return res.status(400).json({ error: "Invalid chat color." });
+    }
+
+    session.name = req.body.newName ?? "Unnamed chat";
+    session.color = req.body.newColor ?? "#1a1a1a";
+
+    await session.save();
+    res.status(200).json({ message: "OK" });
+  } catch (error) {
+    console.error("Failed to delete session: ", error);
+    return res.status(500).json({ error: "Failed to update session." });
   }
-
-  if (req.body.newName.length < 0 || req.body.newName.length > 48) {
-    return res.status(400).json({ error: "Invalid chat name." });
-  }
-
-  const COLOR_REGEX = /^\#[0-9a-f]{6}$/;
-  if (!COLOR_REGEX.test(req.body.newColor)) {
-    return res.status(400).json({ error: "Invalid chat color." });
-  }
-
-  session.name = req.body.newName ?? "Unnamed chat";
-  session.color = req.body.newColor ?? "#1a1a1a";
-
-  await session.save();
-  res.status(200).json({ message: "OK" });
 }
 
 export async function getSessionDataHandler(req, res) {
