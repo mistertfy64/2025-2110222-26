@@ -1,5 +1,9 @@
 async function openSessionModificationMenu(sessionID) {
   const data = await fetch(`${API_BASE}/api/sessions/${sessionID}`);
+  if (!data.ok) {
+    alert("Failed to load session details.");
+    return;
+  }
   const dataJSON = await data.json();
   initializeModificationDialog(dataJSON);
   const dialog = document.getElementById("modification-menu");
