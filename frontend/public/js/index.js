@@ -84,7 +84,7 @@ function renderSessionsList() {
     const mark = document.createElement("div");
     mark.classList.add("circle");
     mark.style.marginLeft = "4px";
-    mark.style.backgroundColor = s.color || "#000000";
+    mark.style.backgroundColor = s.color || "#1a1a1a";
     title.appendChild(mark);
 
     const meta = document.createElement("div");
