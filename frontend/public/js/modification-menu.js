@@ -80,7 +80,6 @@ async function openSessionDeletionMenu() {
     .addEventListener("click", deleteSession);
 }
 
-// TODO: Add feedback on fetch success/fail (Do something with `result`)
 async function deleteSession() {
   const sessionID = document.getElementById(
     "deletion-menu__session-to-delete"
@@ -88,6 +87,10 @@ async function deleteSession() {
   const result = await fetch(`${API_BASE}/api/sessions/${sessionID}`, {
     method: "DELETE"
   });
+  if (!result.ok) {
+    alert("Failed to delete session.");
+    return;
+  }
   destroyDeletionDialog();
   // TODO: can we find a better way to do this as well
   window.location.reload();
