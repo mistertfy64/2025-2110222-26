@@ -112,8 +112,8 @@ export async function changeSessionDataHandler(req, res) {
     return res.status(400).json({ error: "Invalid chat color." });
   }
 
-  session.name = req.body.newName;
-  session.color = req.body.newColor;
+  session.name = req.body.newName ?? "Unnamed chat";
+  session.color = req.body.newColor ?? "#1a1a1a";
 
   await session.save();
   res.status(200).json({ message: "OK" });
