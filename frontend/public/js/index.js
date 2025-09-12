@@ -98,10 +98,10 @@ function renderSessionsList() {
     const modify = document.createElement("div");
     modify.className = "session-modify-text";
     modify.innerText = "Modify";
-    modify.setAttribute(
-      `onclick`,
-      `openSessionModificationMenu("${s.sessionId}")`
-    );
+    modify.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openSessionModificationMenu(s.sessionId);
+    });
     meta.appendChild(modify);
 
     li.appendChild(title);
