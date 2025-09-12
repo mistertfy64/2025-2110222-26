@@ -121,7 +121,7 @@ export async function changeSessionDataHandler(req, res) {
 
 export async function getSessionDataHandler(req, res) {
   const target = req.params.sessionId;
-  const session = await Session.findOne({ sessionId: target });
+  const session = await Session.findOne({ sessionId: target }).lean();
   if (!session) {
     return res.status(404).json({ error: "Session not found." });
   }
