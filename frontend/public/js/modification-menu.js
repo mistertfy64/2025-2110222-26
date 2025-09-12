@@ -25,7 +25,6 @@ function initializeModificationDialog(dataJSON) {
     .addEventListener("click", openSessionDeletionMenu);
 }
 
-// TODO: Add feedback on fetch success/fail (Do something with `result`)
 async function setNewChatSettings() {
   const sessionID = document.getElementById(
     "modification-menu__session-to-change"
@@ -41,6 +40,10 @@ async function setNewChatSettings() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ newName: newName, newColor: newColor })
   });
+  if (!result.ok) {
+    alert("Failed to update session.");
+    return;
+  }
   destroyModificationDialog();
   // TODO: can we find a better way to do this
   window.location.reload();
