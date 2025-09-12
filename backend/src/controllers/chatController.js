@@ -143,17 +143,22 @@ export async function listSessionsHandler(req, res) {
 }
 
 export async function deleteSessionHandler(req, res) {
-  const UUID_REGEX =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-  const target = req.params.sessionId;
-  if (!UUID_REGEX.test(target)) {
-    return res.status(400).json({ error: "Bad Request." });
+  try {
+    const UUID_REGEX =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+    const target = req.params.sessionId;
+    if (!UUID_REGEX.test(target)) {
+      return res.status(400).json({ error: "Bad Request." });
+    }
+    const session = await Session.findOne({ sessionId: target });
+    if (!session) {
+      return res.status(404).json({ error: "Session not found." });
+    }
+    await Message.deleteMany({ sessionId: target });
+    await Session.deleteOne({ sessionId: target });
+    res.status(204).end();
+  } catch (error) {
+    console.error("Failed to delete session: ", error);
+    return res.status(500).json({ error: "Failed to delete session." });
   }
-  const session = await Session.findOne({ sessionId: target });
-  if (!session) {
-    return res.status(404).json({ error: "Session not found." });
-  }
-  await Message.deleteMany({ sessionId: target });
-  await Session.deleteOne({ sessionId: target });
-  res.status(204).json({ message: "Session deleted." });
 }
