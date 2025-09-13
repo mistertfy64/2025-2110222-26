@@ -248,7 +248,12 @@ async function handleSendClicked() {
 
   // optimistically append user's message
   console.log("Added new message", message);
-  appendMessageToLog(message, "self", new Date().toISOString());
+  const messageObject = {
+    content: message,
+    role: "user",
+    createdAt: new Date().toISOString()
+  };
+  // appendMessageToLog(messageObject);
   addUserMessage(currentSessionId, message);
   // await loadSessions(); // update list (maybe new updatedAt)
   await fetchAndRenderHistory(currentSessionId);
