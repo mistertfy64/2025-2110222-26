@@ -9,7 +9,8 @@ export async function createSession(initialMeta = {}) {
   const session = new Session({
     sessionId,
     meta: initialMeta,
-    name: sessionName
+    name: sessionName,
+    color: "#1a1a1a"
   });
   await session.save();
   return sessionId;
