@@ -310,3 +310,23 @@ body {
   width: auto;
   height: 80%;
 }
+
+/* responsiveness */
+@media screen and (max-width: 992px) {
+  #app {
+    display: flex;
+    flex-direction: column-reverse;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
+  }
+
+  #sidebar {
+    width: 100%;
+    height: fit-content;
+  }
+
+  #conversation-area {
+    height: 100vh;
+  }
+}
