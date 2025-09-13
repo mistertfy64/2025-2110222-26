@@ -182,7 +182,6 @@ function renderMessages(messages = []) {
   }
 
   messages.forEach((m) => {
-    console.log(m);
     appendMessageToLog(m);
   });
 
@@ -247,12 +246,12 @@ async function handleSendClicked() {
   }
 
   // optimistically append user's message
-  console.log("Added new message", message);
-  const messageObject = {
-    content: message,
-    role: "user",
-    createdAt: new Date().toISOString()
-  };
+  // console.log("Added new message", message);
+  // const messageObject = {
+  //   content: message,
+  //   role: "user",
+  //   createdAt: new Date().toISOString()
+  // };
   // appendMessageToLog(messageObject);
   addUserMessage(currentSessionId, message);
   // await loadSessions(); // update list (maybe new updatedAt)
