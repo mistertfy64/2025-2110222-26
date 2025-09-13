@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hatsune Miku Chat</title>
   <link href="./css/index.css" rel="stylesheet" />
 </head>
+
 <body>
   <div id="app">
     <aside id="sidebar">
@@ -32,6 +34,49 @@
     </main>
   </div>
 
+  <dialog id="modification-menu">
+    <div>
+      <label for="modification-menu__new-chat-name">New chat name:</label>
+      <input id="modification-menu__new-chat-name" type="text" maxlength="48">
+      <br>
+      <label for="modification-menu__new-chat-color">New chat color:</label>
+      <input id="modification-menu__new-chat-color" type="color">
+      <br>
+      <input type="hidden" id="modification-menu__session-to-change">
+      <div style="display:flex;justify-content: space-between;flex-direction: row;">
+        <div style="text-align: left;">
+          <span id="modification-menu__delete-text">Delete</span>
+        </div>
+        <div style="text-align: right;">
+          <button id="modification-menu__close-button" value="cancel" formmethod="dialog">Cancel</button>
+          <button id="modification-menu__confirm-button" value="default">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="deletion-menu">
+    <div>
+      <input type="hidden" id="deletion-menu__session-to-delete">
+      <div style="text-align: center;">
+        Are you sure you want to delete this chat?
+        <br>
+        This can't be undone!
+      </div>
+      <div style="display:flex;justify-content: space-between;flex-direction: row;">
+        <div style="text-align: left;">
+          <button id="deletion-menu__close-button" value="cancel" formmethod="dialog">Cancel</button>
+        </div>
+        <div style="text-align: right;">
+          <button id="deletion-menu__confirm-button" value="default">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+
+  <script src="./js/modification-menu.js"></script>
   <script src="./js/index.js"></script>
 </body>
+
 </html>

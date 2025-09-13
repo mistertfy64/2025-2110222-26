@@ -1,5 +1,6 @@
 import * as chatService from "../services/chatService.js";
 import Session from "../models/sessionModel.js";
+import Message from "../models/messageModel.js";
 import { interact } from "../services/llm.js";
 
 const MAXIMUM_LENGTH = 1024;
@@ -95,6 +96,43 @@ export async function addMessageAndGetReplyHandler(req, res) {
   }
 }
 
+export async function changeSessionDataHandler(req, res) {
+  try {
+    const target = req.params.sessionId;
+    const session = await Session.findOne({ sessionId: target });
+    if (!session) {
+      return res.status(404).json({ error: "Session not found." });
+    }
+
+    if (req.body.newName.length < 0 || req.body.newName.length > 48) {
+      return res.status(400).json({ error: "Invalid chat name." });
+    }
+
+    const COLOR_REGEX = /^\#[0-9a-f]{6}$/;
+    if (!COLOR_REGEX.test(req.body.newColor)) {
+      return res.status(400).json({ error: "Invalid chat color." });
+    }
+
+    session.name = req.body.newName ?? "Unnamed chat";
+    session.color = req.body.newColor ?? "#1a1a1a";
+
+    await session.save();
+    res.status(200).json({ message: "OK" });
+  } catch (error) {
+    console.error("Failed to delete session: ", error);
+    return res.status(500).json({ error: "Failed to update session." });
+  }
+}
+
+export async function getSessionDataHandler(req, res) {
+  const target = req.params.sessionId;
+  const session = await Session.findOne({ sessionId: target }).lean();
+  if (!session) {
+    return res.status(404).json({ error: "Session not found." });
+  }
+  res.status(200).json(session);
+}
+
 export async function listSessionsHandler(req, res) {
   const sessions = await Session.find({}).sort({ updatedAt: -1 }).lean();
   return res.json(
@@ -102,7 +140,30 @@ export async function listSessionsHandler(req, res) {
       sessionId: s.sessionId,
       createdAt: s.createdAt,
       updatedAt: s.updatedAt,
+      name: s.name ?? "Unnamed chat",
+      color: s.color ?? "#1a1a1a",
       meta: s.meta
     }))
   );
+}
+
+export async function deleteSessionHandler(req, res) {
+  try {
+    const UUID_REGEX =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+    const target = req.params.sessionId;
+    if (!UUID_REGEX.test(target)) {
+      return res.status(400).json({ error: "Bad Request." });
+    }
+    const session = await Session.findOne({ sessionId: target });
+    if (!session) {
+      return res.status(404).json({ error: "Session not found." });
+    }
+    await Message.deleteMany({ sessionId: target });
+    await Session.deleteOne({ sessionId: target });
+    res.status(204).end();
+  } catch (error) {
+    console.error("Failed to delete session: ", error);
+    return res.status(500).json({ error: "Failed to delete session." });
+  }
 }
