@@ -1,0 +1,342 @@
+:root {
+  --color-self: #00e700;
+  --color-miku: #3aaeb5;
+  --sidebar-bg: #0f1722;
+  --sidebar-text: #e6eef2;
+  --muted: #99a0a6;
+  --app-bg: #f6f8fa;
+  --max-width: 1100px;
+}
+
+/* reset / base */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial;
+  background: var(--app-bg);
+  color: #0b1420;
+}
+#app {
+  max-width: var(--max-width);
+  margin: 12px auto 6px auto;
+  height: calc(100vh - 56px);
+  display: flex;
+  gap: 12px;
+  padding: 12px auto 2px auto;
+}
+
+/* Sidebar */
+#sidebar {
+  width: 280px;
+  min-width: 220px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.sidebar-header h1 {
+  font-size: 18px;
+  margin: 0;
+}
+.btn {
+  background: transparent;
+  color: var(--sidebar-text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.sidebar-body {
+  padding: 8px;
+  overflow-y: auto;
+  flex: 1;
+}
+.sidebar-body h3 {
+  margin: 8px 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* session list */
+.sessions-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+.session-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 120ms;
+  color: var(--sidebar-text);
+}
+.session-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+.session-item.active {
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--color-miku);
+  padding-left: 7px;
+}
+.session-title {
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.session-meta {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.session-modify-text {
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: underline;
+  margin: 0 4px;
+  cursor: pointer;
+}
+/* Main chat area */
+#main-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+#conversation-area {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(10, 20, 30, 0.06);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* message log */
+#message-log {
+  padding: 18px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* entry: avatar + message + timestamp */
+.entry {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  max-width: 80%;
+}
+
+/* reverse for self messages */
+.entry.entry--self {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+/* message bubble */
+.message {
+  padding: 10px 14px;
+  border-radius: 16px;
+  margin: 0;
+  width: fit-content;
+  line-height: 1.25;
+  word-break: break-word;
+  box-shadow: 0 2px 6px rgba(10, 20, 30, 0.04);
+}
+
+.message--self {
+  background-color: var(--color-self);
+  color: #000000;
+}
+
+.message--response {
+  background-color: var(--color-miku);
+  color: #ffffff;
+}
+
+/* small timestamp */
+.timestamp--complicated {
+  font-size: 12px;
+  color: #5b6970;
+  position: relative;
+  margin-left: 6px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+.timestamp--simple {
+  font-size: 12px;
+  color: #5b6970;
+  position: relative;
+  margin-left: 6px;
+  opacity: 0.6;
+}
+
+.timestamp__brief {
+  opacity: 0.6;
+  transition: opacity 250ms linear;
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.timestamp__detailed {
+  opacity: 0;
+  transition: opacity 250ms linear;
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.timestamp--complicated:hover .timestamp__brief {
+  opacity: 0;
+}
+
+.timestamp--complicated:hover .timestamp__detailed {
+  opacity: 0.6;
+}
+
+/* avatars (keep your assets) */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  border: 3px solid rgba(0, 0, 0, 0.08);
+}
+.avatar--self {
+  background-image: url("../assets/images/self.png");
+}
+.avatar--response {
+  background-image: url("../assets/images/SixBFDI.png");
+}
+
+/* sending area */
+#sending-area {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #eee;
+}
+#sending-area input[type="text"] {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+}
+#sending-area button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-miku);
+  color: white;
+  cursor: pointer;
+}
+
+/* small util */
+.empty-state {
+  color: #6b7780;
+  font-size: 14px;
+  padding: 24px;
+  text-align: center;
+}
+
+.circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* modification menu */
+#modification-menu__delete-text {
+  opacity: 0.3;
+  font-size: smaller;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* deletion menu */
+#deletion-menu {
+  background-color: #bb0000;
+  color: #ffffff;
+}
+
+/* character area */
+#character-area {
+  position: unset;
+  width: 100%;
+  height: 40%;
+  z-index: 4;
+  background-color: #000000;
+  background-image: url("../assets/images/equation-playground.png");
+  background-size: cover;
+}
+
+#character-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+#character {
+  width: auto;
+  height: 80%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* footer */
+footer {
+  text-align: center;
+  font-size: 10px;
+  opacity: 0.6;
+  margin: 2px;
+}
+
+/* responsiveness */
+@media screen and (max-width: 992px) {
+  #app {
+    display: flex;
+    flex-direction: column-reverse;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
+  }
+
+  #sidebar {
+    width: 100%;
+    height: fit-content;
+  }
+
+  #conversation-area {
+    height: 100vh;
+  }
+}
