@@ -70,7 +70,7 @@ const EMOTION_THRESHOLDS = {
 };
 
 function getEmotionClassification(emotion) {
-  let emotion = "";
+  let result = "";
   let distanceDifference = 100;
   let emotionPrecedence = -1;
   for (let classification of Object.keys(EMOTION_THRESHOLDS)) {
@@ -83,13 +83,14 @@ function getEmotionClassification(emotion) {
         arousalDifference * arousalDifference
     );
     if (distance < distanceDifference) {
-      emotion = EMOTION_THRESHOLDS[classification];
+      result = classification;
     } else if (
       distance == distanceDifference &&
       EMOTION_THRESHOLDS[classification].precedence > emotionPrecedence
     ) {
-      emotion = EMOTION_THRESHOLDS[classification];
+      result = classification;
     }
   }
-  return emotion;
+  console.log("This response is feeling... ", result);
+  return result;
 }
