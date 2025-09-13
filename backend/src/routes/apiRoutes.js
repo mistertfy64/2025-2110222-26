@@ -32,4 +32,7 @@ router.get("/sessions", chatController.listSessionsHandler);
 // Existing single endpoint that integrates saving + LLM reply
 router.post("/message", chatController.addMessageAndGetReplyHandler);
 
+router.post("/addusermessages", chatController.saveUserMessageHandler);
+
+
 export default router;

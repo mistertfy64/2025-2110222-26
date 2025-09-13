@@ -7,7 +7,7 @@ async function interact(userMessage) {
     {
       method: "POST",
       headers: {
-        "Authorization": process.env.OPENROUTER_API_KEY,
+        "Authorization": "Bearer "+ process.env.OPENROUTER_API_KEY,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -21,7 +21,7 @@ async function interact(userMessage) {
   );
 
   const data = await response.json();
-
+  // console.log(data);
   if (data?.choices?.[0]?.finish_reason === "error") {
     console.error("Error talking to OpenRouter:", error);
     return "(error while generating response)";
