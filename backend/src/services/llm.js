@@ -67,7 +67,7 @@ async function interact(userMessage) {
   }
 
   if (data?.choices?.[0]?.finish_reason === "error") {
-    console.error("Error talking to OpenRouter:", error);
+    console.error("Error talking to OpenRouter: (finish_reason=error)", data);
     return { message: "(error while generating response)" };
   }
 
