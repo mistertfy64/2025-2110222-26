@@ -23,11 +23,11 @@ body {
 }
 #app {
   max-width: var(--max-width);
-  margin: 12px auto;
-  height: calc(100vh - 24px);
+  margin: 12px auto 6px auto;
+  height: calc(100vh - 56px);
   display: flex;
   gap: 12px;
-  padding: 12px;
+  padding: 12px auto 2px auto;
 }
 
 /* Sidebar */
@@ -309,4 +309,34 @@ body {
 #character {
   width: auto;
   height: 80%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* footer */
+footer {
+  text-align: center;
+  font-size: 10px;
+  opacity: 0.6;
+  margin: 2px;
+}
+
+/* responsiveness */
+@media screen and (max-width: 992px) {
+  #app {
+    display: flex;
+    flex-direction: column-reverse;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
+  }
+
+  #sidebar {
+    width: 100%;
+    height: fit-content;
+  }
+
+  #conversation-area {
+    height: 100vh;
+  }
 }

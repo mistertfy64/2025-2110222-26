@@ -76,7 +76,7 @@ async function interact(userMessage) {
     const reply = JSON.parse(data?.choices?.[0]?.message?.content);
     return reply;
   } catch (error) {
-    console.error("Failed to parse model JSON:", erro);
+    console.error("Failed to parse model JSON:", error);
     return { message: "(error while generating response)" };
   }
 }
