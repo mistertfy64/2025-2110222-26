@@ -129,6 +129,11 @@ async function selectSession(sessionId) {
 
   // fetch history
   await fetchAndRenderHistory(sessionId);
+
+  // also reset character pose
+  document.getElementById(
+    "character"
+  ).src = `./assets/images/emotions/six-neutral.png`;
 }
 
 async function createNewSession() {
