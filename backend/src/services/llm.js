@@ -15,19 +15,58 @@ async function interact(userMessage) {
         messages: [
           { role: "system", content: "You are a helpful assistant." },
           { role: "user", content: userMessage }
-        ]
+        ],
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "response",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                emotion: {
+                  type: "object",
+                  properties: {
+                    arousal: {
+                      type: "number",
+                      description:
+                        "The magnitude of arousal-like feelings that the response evokes, that is, the degree of stimulation that the response evokes. Magnitude must be between -1 and +1, inclusive, where -1 indicates no arousal-like feelings, and +1 includes maximal arousal-like feelings."
+                    },
+                    valence: {
+                      type: "number",
+                      description:
+                        "The magnitude of positive-valence-like feelings that the response evokes, that is, the degree of the positivity that the response evokes. Magnitude must be between -1 and +1, inclusive, where -1 indicates extremely negative feelings, and +1 includes extremely positive feelings."
+                    }
+                  }
+                },
+                message: {
+                  type: "string",
+                  description:
+                    "What the model would reply with, without markdown formatting."
+                }
+              },
+              required: ["emotion", "message"],
+              additionalProperties: false
+            }
+          }
+        }
       })
     }
   );
 
   const data = await response.json();
 
-  if (data?.choices?.[0]?.finish_reason === "error") {
-    console.error("Error talking to OpenRouter:", error);
-    return "(error while generating response)";
+  if (!data?.choices?.[0]?.message?.content) {
+    console.error("OpenRouter object not complete");
+    return { message: "(error while generating response)" };
   }
 
-  const reply = data?.choices?.[0]?.message?.content;
+  if (data?.choices?.[0]?.finish_reason === "error") {
+    console.error("Error talking to OpenRouter:", error);
+    return { message: "(error while generating response)" };
+  }
+
+  const reply = JSON.parse(data?.choices?.[0]?.message?.content);
   return reply;
 }
 
