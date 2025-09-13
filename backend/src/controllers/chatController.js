@@ -122,7 +122,7 @@ export async function addMessageAndGetReplyHandler(req, res) {
     await chatService.addMessageToSession(
       sessionId,
       "assistant",
-      reply ?? "(no response)",
+      reply.message ?? "(no response)",
       {
         sent: replyTimestamp,
         thinkingDuration: replyTimestamp - sentTimestamp

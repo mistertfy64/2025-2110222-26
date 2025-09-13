@@ -26,6 +26,9 @@ async function init() {
   } else {
     await createNewSession();
   }
+  document.getElementById(
+    "character"
+  ).src = `./assets/images/emotions/six-neutral.png`;
 }
 
 function bindUI() {
@@ -126,6 +129,11 @@ async function selectSession(sessionId) {
 
   // fetch history
   await fetchAndRenderHistory(sessionId);
+
+  // also reset character pose
+  document.getElementById(
+    "character"
+  ).src = `./assets/images/emotions/six-neutral.png`;
 }
 
 async function createNewSession() {
@@ -274,6 +282,11 @@ async function handleSendClicked() {
     }
 
     const data = await res.json();
+    const emotion = getEmotionClassification(data.reply.emotion);
+    document.getElementById(
+      "character"
+    ).src = `./assets/images/emotions/six-${emotion}.png`;
+
     // Prefer to re-fetch full history (keeps UI consistent with server)
     await loadSessions(); // update list (maybe new updatedAt)
     await fetchAndRenderHistory(currentSessionId);
