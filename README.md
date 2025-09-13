@@ -32,3 +32,5 @@ npm i
 ```
 
 Once complete, start both the frontend and backend. The webapp should now be usable.
+
+The frontend can be accessed through port 39393, while the backend can be accessed through port 39399.
