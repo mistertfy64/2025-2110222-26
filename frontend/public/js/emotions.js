@@ -84,13 +84,16 @@ function getEmotionClassification(emotion) {
     );
     if (distance < distanceDifference) {
       result = classification;
+      distanceDifference = distance;
+      emotionPrecedence = EMOTION_THRESHOLDS[classification].precedence;
     } else if (
       distance == distanceDifference &&
       EMOTION_THRESHOLDS[classification].precedence > emotionPrecedence
     ) {
       result = classification;
+      distanceDifference = distance;
+      emotionPrecedence = EMOTION_THRESHOLDS[classification].precedence;
     }
   }
-  console.log("This response is feeling... ", result);
   return result;
 }
