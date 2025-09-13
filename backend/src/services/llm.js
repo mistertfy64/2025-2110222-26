@@ -54,6 +54,11 @@ async function interact(userMessage) {
     }
   );
 
+  if (!response.ok) {
+    console.error(`OpenRouter HTTP ${response.status}`);
+    return { message: "(error while generating response)" };
+  }
+
   const data = await response.json();
 
   if (!data?.choices?.[0]?.message?.content) {
@@ -66,8 +71,13 @@ async function interact(userMessage) {
     return { message: "(error while generating response)" };
   }
 
-  const reply = JSON.parse(data?.choices?.[0]?.message?.content);
-  return reply;
+  try {
+    const reply = JSON.parse(data?.choices?.[0]?.message?.content);
+    return reply;
+  } catch (error) {
+    console.error("Failed to parse model JSON:", erro);
+    return { message: "(error while generating response)" };
+  }
 }
 
 export { interact };
