@@ -156,8 +156,8 @@ async function createNewSession() {
 
 // Fetch & render history
 async function fetchAndRenderHistory(sessionId) {
-  messageLog.innerHTML = ""; // clear while loading
-  showEmptyState("Loading conversation…");
+  // messageLog.innerHTML = ""; // clear while loading
+  // showEmptyState("Loading conversation…");
 
   try {
     const res = await fetch(
@@ -232,7 +232,6 @@ async function addUserMessage(currentSessionId, message) {
   }
 }
 
-
 async function handleSendClicked() {
   console.log("Handle click is running");
   const raw = messageInput.value || "";
@@ -248,12 +247,12 @@ async function handleSendClicked() {
   }
 
   // optimistically append user's message
-  console.log("Added new message",message);
+  console.log("Added new message", message);
   appendMessageToLog(message, "self", new Date().toISOString());
-  addUserMessage(currentSessionId,message);
+  addUserMessage(currentSessionId, message);
   // await loadSessions(); // update list (maybe new updatedAt)
   await fetchAndRenderHistory(currentSessionId);
-  console.log("Re Render the chat")
+  console.log("Re Render the chat");
   messageInput.value = "";
   scrollToBottom();
   messageInput.disabled = true;
