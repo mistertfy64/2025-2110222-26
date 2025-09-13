@@ -80,7 +80,7 @@ export async function saveUserMessageHandler(req, res) {
     // Save the message
     await chatService.addMessageToSession(sessionId, "user", message, {
       createIfNotExist: true,
-      sent: sentTimestamp,
+      sent: sentTimestamp
     });
 
     // Respond with useful info
@@ -90,8 +90,8 @@ export async function saveUserMessageHandler(req, res) {
       message: {
         role: "user",
         content: message,
-        createdAt: sentTimestamp,
-      },
+        createdAt: sentTimestamp
+      }
     });
   } catch (err) {
     console.error("saveUserMessageHandler:", err);
@@ -100,7 +100,6 @@ export async function saveUserMessageHandler(req, res) {
       .json({ error: "Failed to process message", details: err.message });
   }
 }
-
 
 export async function addMessageAndGetReplyHandler(req, res) {
   try {

@@ -34,5 +34,4 @@ router.post("/message", chatController.addMessageAndGetReplyHandler);
 
 router.post("/addusermessages", chatController.saveUserMessageHandler);
 
-
 export default router;
