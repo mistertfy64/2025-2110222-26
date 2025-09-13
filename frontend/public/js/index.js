@@ -182,6 +182,7 @@ function renderMessages(messages = []) {
   }
 
   messages.forEach((m) => {
+    console.log(m);
     appendMessageToLog(m);
   });
 
@@ -189,7 +190,51 @@ function renderMessages(messages = []) {
 }
 
 // Sending Messages
+async function addUserMessage(currentSessionId, message) {
+  try {
+    // Disable input while sending
+    messageInput.disabled = true;
+    sendBtn.disabled = true;
+
+    // Send request to backend
+    const res = await fetch(`${API_BASE}/api/addusermessages`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId: currentSessionId, message })
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to save user message");
+    }
+
+    const data = await res.json();
+
+    // ✅ Optimistically append user message immediately
+    // if (data.message) {
+    //   appendMessageToLog(data.message);
+    //   scrollToBottom();
+    // }
+
+    // 🔄 Re-fetch from server to keep UI consistent
+    await loadSessions();
+    await fetchAndRenderHistory(currentSessionId);
+
+    // Put cursor back into input box
+    messageInput.focus();
+    messageInput.value = "";
+  } catch (err) {
+    console.error("Error sending message:", err);
+    alert("Failed to send message. See console.");
+  } finally {
+    // Re-enable input + button
+    messageInput.disabled = false;
+    sendBtn.disabled = false;
+  }
+}
+
+
 async function handleSendClicked() {
+  console.log("Handle click is running");
   const raw = messageInput.value || "";
   const message = raw.trim();
   if (!message) return;
@@ -203,7 +248,12 @@ async function handleSendClicked() {
   }
 
   // optimistically append user's message
+  console.log("Added new message",message);
   appendMessageToLog(message, "self", new Date().toISOString());
+  addUserMessage(currentSessionId,message);
+  // await loadSessions(); // update list (maybe new updatedAt)
+  await fetchAndRenderHistory(currentSessionId);
+  console.log("Re Render the chat")
   messageInput.value = "";
   scrollToBottom();
   messageInput.disabled = true;
