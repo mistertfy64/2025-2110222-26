@@ -309,6 +309,8 @@ body {
 #character {
   width: auto;
   height: 80%;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 /* responsiveness */
