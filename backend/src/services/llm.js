@@ -7,7 +7,7 @@ async function interact(userMessage) {
     {
       method: "POST",
       headers: {
-        "Authorization": process.env.OPENROUTER_API_KEY,
+        "Authorization": "Bearer "+ process.env.OPENROUTER_API_KEY,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -65,6 +65,7 @@ async function interact(userMessage) {
     console.error("OpenRouter object not complete");
     return { message: "(error while generating response)" };
   }
+
 
   if (data?.choices?.[0]?.finish_reason === "error") {
     console.error("Error talking to OpenRouter: (finish_reason=error)", data);

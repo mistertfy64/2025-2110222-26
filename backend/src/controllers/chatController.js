@@ -57,6 +57,51 @@ export async function getSessionMessagesHandler(req, res) {
   }
 }
 
+export async function saveUserMessageHandler(req, res) {
+  try {
+    let { sessionId, message } = req.body;
+
+    // Trim whitespace
+    message = (message || "").trim();
+
+    if (!validateMessage(message)) {
+      return res.status(400).json({ error: "Message empty or too long." });
+    }
+
+    // Ensure a session exists
+    if (!sessionId) {
+      sessionId = await chatService.createSession();
+    } else {
+      await chatService.ensureSession(sessionId);
+    }
+
+    const sentTimestamp = Date.now();
+
+    // Save the message
+    await chatService.addMessageToSession(sessionId, "user", message, {
+      createIfNotExist: true,
+      sent: sentTimestamp,
+    });
+
+    // Respond with useful info
+    return res.status(200).json({
+      status: "OK",
+      sessionId,
+      message: {
+        role: "user",
+        content: message,
+        createdAt: sentTimestamp,
+      },
+    });
+  } catch (err) {
+    console.error("saveUserMessageHandler:", err);
+    return res
+      .status(500)
+      .json({ error: "Failed to process message", details: err.message });
+  }
+}
+
+
 export async function addMessageAndGetReplyHandler(req, res) {
   try {
     let { sessionId, message } = req.body;
@@ -70,12 +115,7 @@ export async function addMessageAndGetReplyHandler(req, res) {
     } else {
       await chatService.ensureSession(sessionId);
     }
-
     const sentTimestamp = Date.now();
-    await chatService.addMessageToSession(sessionId, "user", message, {
-      createIfNotExist: true,
-      sent: sentTimestamp
-    });
 
     const reply = await interact(message);
     const replyTimestamp = Date.now();
