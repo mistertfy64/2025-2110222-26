@@ -15,8 +15,8 @@ export const addMessage = async (req, res) => {
     const reply = await interact(userMessage);
     res.status(200).json({
       user: userMessage,
-      reply: reply.message ?? "(no response)",
-      emotion: reply.emotion ?? null
+      reply: reply?.message ?? "(no response)",
+      emotion: reply?.emotion ?? null
     });
   } catch (error) {
     console.error("Error talking to OpenRouter:", error);
