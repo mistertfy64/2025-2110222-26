@@ -23,5 +23,6 @@
     "express": "^5.1.0",
     "mongoose": "^8.18.1",
     "uuid": "^13.0.0"
-  }
+  },
+  "private": true
 }
