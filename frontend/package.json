@@ -11,12 +11,13 @@
     "url": "git+https://github.com/mistertfy64/2025-2110222-26.git"
   },
   "author": "mistertfy64",
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/mistertfy64/2025-2110222-26/issues"
   },
   "homepage": "https://github.com/mistertfy64/2025-2110222-26#readme",
   "dependencies": {
     "express": "^5.1.0"
-  }
+  },
+  "private": true
 }
