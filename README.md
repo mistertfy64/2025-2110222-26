@@ -1,4 +1,4 @@
-# Chat with "Hatsune Miku"!
+# Chat with " Two"!
 
 > [!NOTE]
 > This webapp was made as coursework for Chulalongkorn University's 2025 offering of 2110222 (Introduction to Computer Engineering and Digital Technology).
@@ -8,8 +8,8 @@
 > All fictional characters belong to their respective owners. No copyright infringement is intended.
 
 Are you bored and/or wanted to find a Vocaloid to talk to? 
-Now you can chat with an LLM pretend to be Hatsune Miku! 
-While it may not be the real Hatsune Miku, it is definitely close enough that no one would notice! 
+Now you can chat with an LLM pretend to be  Two! 
+While it may not be the real  Two, it is definitely close enough that no one would notice! 
 
 ## Setup
 To use this webapp, manual configuration is required for two parts of this web application: the MongoDB database and the OpenRouter API key.
