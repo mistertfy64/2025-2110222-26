@@ -1,6 +1,6 @@
 :root {
-  --color-self: #00e700;
-  --color-miku: #3aaeb5;
+  --color-self: #bbbbbb;
+  --color-two: #44c549;
   --sidebar-bg: #0f1722;
   --sidebar-text: #e6eef2;
   --muted: #99a0a6;
@@ -94,7 +94,7 @@ body {
 }
 .session-item.active {
   background: rgba(255, 255, 255, 0.04);
-  border-left: 3px solid var(--color-miku);
+  border-left: 3px solid var(--color-two);
   padding-left: 7px;
 }
 .session-title {
@@ -176,7 +176,7 @@ body {
 }
 
 .message--response {
-  background-color: var(--color-miku);
+  background-color: var(--color-two);
   color: #ffffff;
 }
 
@@ -254,7 +254,7 @@ body {
   padding: 10px 14px;
   border-radius: 8px;
   border: none;
-  background: var(--color-miku);
+  background: var(--color-two);
   color: white;
   cursor: pointer;
 }
