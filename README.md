@@ -18,7 +18,7 @@ Now you can chat with an LLM pretending to be Two!
 While it may not be the real Two, it is definitely close enough that no one would notice! 
 Unlike other chatbots, you can also see Two in all his glory with thirteen full emotion poses!
 You can even add categorize chats by adding color labels to them!
-<img float="right"  src="./two-profile-picture.png">
+<img align="right"  src="./two-profile-picture.png">
 
 ## Setup
 To use this webapp, manual configuration is required for two parts of this web application: the MongoDB database and the OpenRouter API key.
