@@ -234,6 +234,7 @@ body {
 }
 .avatar--response {
   background-image: url("../assets/images/two-profile-picture.webp");
+  background-repeat: no-repeat;
 }
 
 /* sending area */
