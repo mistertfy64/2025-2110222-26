@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:39399"; //change later if needed
+const API_BASE = "http://localhost:22222"; //change later if needed
 
 const SESSIONS_KEY = "hatsune_current_session";
 const MAXIMUM_LENGTH = 1024;
@@ -28,7 +28,7 @@ async function init() {
   }
   document.getElementById(
     "character"
-  ).src = `./assets/images/emotions/two-neutral.webp`;
+  ).src = `./assets/images/emotions/two-neutral.png`;
 }
 
 function bindUI() {
@@ -133,7 +133,7 @@ async function selectSession(sessionId) {
   // also reset character pose
   document.getElementById(
     "character"
-  ).src = `./assets/images/emotions/two-neutral.webp`;
+  ).src = `./assets/images/emotions/two-neutral.png`;
 }
 
 async function createNewSession() {
@@ -285,7 +285,7 @@ async function handleSendClicked() {
     const emotion = getEmotionClassification(data.reply.emotion);
     document.getElementById(
       "character"
-    ).src = `./assets/images/emotions/two-${emotion}.webp`;
+    ).src = `./assets/images/emotions/two-${emotion}.png`;
 
     // Prefer to re-fetch full history (keeps UI consistent with server)
     await loadSessions(); // update list (maybe new updatedAt)
