@@ -1,6 +1,6 @@
 {
   "name": "chat-with-two-frontend",
-  "version": "0.1.0-alpha",
+  "version": "0.1.0-alpha.1",
   "description": "Chat with! Wow! (Submission for an university assignment)",
   "main": "index.js",
   "scripts": {
