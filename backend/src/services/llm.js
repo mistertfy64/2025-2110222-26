@@ -1,7 +1,53 @@
 import "dotenv/config";
+import { getSessionMessages } from './chatService.js';
 
-async function interact(userMessage) {
+const SYSTEM_PROMPT = "You are a helpful assistant.";
+const MAX_HISTORY_MESSAGES = 30;      // keep the last N turns
+const MAX_TOTAL_CHARS = 30000;        // simple budget to avoid huge payloads
+
+function normalizeMsg(doc) {
+  // Only user/assistant are sent to the model; default unknown roles to "user"
+  const role = (doc.role === "assistant" || doc.role === "user") ? doc.role : "user";
+  const content = (typeof doc.content === "string") ? doc.content : JSON.stringify(doc.content);
+  return { role, content };
+}
+
+async function buildMessages(sessionId, userMessage) {
+  const history = await getSessionMessages(sessionId); // already sorted ascending
+  let msgs = history
+    .map(normalizeMsg)
+    .filter(m => m.role === "user" || m.role === "assistant");
+
+  // Keep only the most recent N messages
+  if (msgs.length > MAX_HISTORY_MESSAGES) {
+    msgs = msgs.slice(-MAX_HISTORY_MESSAGES);
+  }
+
+  // Enforce a simple char budget from the tail
+  let total = 0;
+  const tail = [];
+  for (let i = msgs.length - 1; i >= 0; i--) {
+    const len = msgs[i].content?.length ?? 0;
+    if (total + len > MAX_TOTAL_CHARS) break;
+    tail.push(msgs[i]);
+    total += len;
+  }
+  tail.reverse();
+
+  // Final messages: system → history → latest user input
+  return [
+    { role: "system", content: SYSTEM_PROMPT },
+    ...tail,
+    { role: "user", content: userMessage }
+  ];
+}
+
+
+
+async function interact(userMessage,sessionId) {
   // Send conversation request to OpenRouter
+  const messages = await buildMessages(sessionId, userMessage);
+
   const response = await fetch(
     "https://openrouter.ai/api/v1/chat/completions",
     {
@@ -12,10 +58,7 @@ async function interact(userMessage) {
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash-lite", // you can change model here
-        messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: userMessage }
-        ],
+        messages: messages,
         response_format: {
           type: "json_schema",
           json_schema: {
