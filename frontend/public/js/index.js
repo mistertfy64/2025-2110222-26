@@ -28,7 +28,7 @@ async function init() {
   }
   document.getElementById(
     "character"
-  ).src = `./assets/images/emotions/six-neutral.png`;
+  ).src = `./assets/images/emotions/two-neutral.webp`;
 }
 
 function bindUI() {
@@ -133,7 +133,7 @@ async function selectSession(sessionId) {
   // also reset character pose
   document.getElementById(
     "character"
-  ).src = `./assets/images/emotions/six-neutral.png`;
+  ).src = `./assets/images/emotions/two-neutral.webp`;
 }
 
 async function createNewSession() {
@@ -285,7 +285,7 @@ async function handleSendClicked() {
     const emotion = getEmotionClassification(data.reply.emotion);
     document.getElementById(
       "character"
-    ).src = `./assets/images/emotions/six-${emotion}.png`;
+    ).src = `./assets/images/emotions/two-${emotion}.webp`;
 
     // Prefer to re-fetch full history (keeps UI consistent with server)
     await loadSessions(); // update list (maybe new updatedAt)
