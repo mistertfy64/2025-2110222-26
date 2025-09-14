@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { getSessionMessages } from "./chatService.js";
+import { SYSTEM_PROMPT } from "../server.js";
 
-const SYSTEM_PROMPT = "You are a helpful assistant.";
 const MAX_HISTORY_MESSAGES = 30; // keep the last N turns
 const MAX_TOTAL_CHARS = 30000; // simple budget to avoid huge payloads
 
@@ -38,7 +38,7 @@ async function buildMessages(sessionId, userMessage) {
 
   // Final messages: system → history → latest user input
   return [
-    { role: "system", content: SYSTEM_PROMPT },
+    { role: "system", content: SYSTEM_PROMPT.content },
     ...tail,
     { role: "user", content: userMessage }
   ];
@@ -99,7 +99,8 @@ async function interact(userMessage, sessionId) {
   );
 
   if (!response.ok) {
-    console.error(`OpenRouter HTTP ${response.status}`);
+    const data = await response.json();
+    console.error(`OpenRouter HTTP ${response.status}`, data.error?.message);
     return { message: "(error while generating response)" };
   }
 
