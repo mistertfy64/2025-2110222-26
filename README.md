@@ -1,4 +1,4 @@
-# Chat with " Two"!
+# Chat with "Two" from Battle for Dream Island!
 
 > [!NOTE]
 > This webapp was made as coursework for Chulalongkorn University's 2025 offering of 2110222 (Introduction to Computer Engineering and Digital Technology).
@@ -6,10 +6,15 @@
 
 > [!NOTE]
 > All fictional characters belong to their respective owners. No copyright infringement is intended.
+> Particularly, Two is from "Battle for Dream Island", which is by [jacknjellify](https://www.youtube.com/@BFDI).
 
-Are you bored and/or wanted to find a Vocaloid to talk to? 
-Now you can chat with an LLM pretend to be  Two! 
-While it may not be the real  Two, it is definitely close enough that no one would notice! 
+
+Are you bored and/or wanted to find a BFDI host to talk to? 
+Now you can chat with an LLM pretending to be Two! 
+While it may not be the real Two, it is definitely close enough that no one would notice! 
+<img align="right"  src="./two-profile-picture.png">
+
+
 
 ## Setup
 To use this webapp, manual configuration is required for two parts of this web application: the MongoDB database and the OpenRouter API key.
