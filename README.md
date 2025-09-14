@@ -1,20 +1,24 @@
 # Chat with "Two" from Battle for Dream Island!
 
+> [!WARNING]
+> If you choose to host this webapp, make sure it has some level of privacy (e.g. a firewall), since all chats can be accessed by anyone because this webapp has no authentication/authorization purposes. (because this assignment didn't request for it)
+>  
+> The bottom line if you choose to host this webapp is to NOT open it to everyone. 
+
 > [!NOTE]
-> This webapp was made as coursework for Chulalongkorn University's 2025 offering of 2110222 (Introduction to Computer Engineering and Digital Technology).
+> This webapp was made as coursework for Chulalongkorn University's 2025 offering of "Introduction to Computer Engineering and Digital Technology" (2110222).
 > This webapp is NOT meant for production use, due to the poor coding practices used, as well as the tight time limits.
 
 > [!NOTE]
 > All fictional characters belong to their respective owners. No copyright infringement is intended.
 > Particularly, Two is from "Battle for Dream Island", which is by [jacknjellify](https://www.youtube.com/@BFDI).
 
-
 Are you bored and/or wanted to find a BFDI host to talk to? 
 Now you can chat with an LLM pretending to be Two! 
 While it may not be the real Two, it is definitely close enough that no one would notice! 
-<img align="right"  src="./two-profile-picture.png">
-
-
+Unlike other chatbots, you can also see Two in all his glory with thirteen full emotion poses!
+You can even add categorize chats by adding color labels to them!
+<img float="right"  src="./two-profile-picture.png">
 
 ## Setup
 To use this webapp, manual configuration is required for two parts of this web application: the MongoDB database and the OpenRouter API key.
