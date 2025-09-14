@@ -1,6 +1,6 @@
 const API_BASE = "http://localhost:22222"; //change later if needed
 
-const SESSIONS_KEY = "hatsune_current_session";
+const SESSIONS_KEY = "two_current_session";
 const MAXIMUM_LENGTH = 1024;
 
 // DOM refs
