@@ -1,4 +1,5 @@
-const API_BASE = "http://localhost:22222"; //change later if needed
+const API_BASE =
+  window.location.protocol + "//" + window.location.hostname + ":22222";
 
 const SESSIONS_KEY = "two_current_session";
 const MAXIMUM_LENGTH = 1024;
