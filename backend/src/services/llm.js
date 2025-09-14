@@ -1,14 +1,16 @@
 import "dotenv/config";
-import { getSessionMessages } from './chatService.js';
+import { getSessionMessages } from "./chatService.js";
 
 const SYSTEM_PROMPT = "You are a helpful assistant.";
-const MAX_HISTORY_MESSAGES = 30;      // keep the last N turns
-const MAX_TOTAL_CHARS = 30000;        // simple budget to avoid huge payloads
+const MAX_HISTORY_MESSAGES = 30; // keep the last N turns
+const MAX_TOTAL_CHARS = 30000; // simple budget to avoid huge payloads
 
 function normalizeMsg(doc) {
   // Only user/assistant are sent to the model; default unknown roles to "user"
-  const role = (doc.role === "assistant" || doc.role === "user") ? doc.role : "user";
-  const content = (typeof doc.content === "string") ? doc.content : JSON.stringify(doc.content);
+  const role =
+    doc.role === "assistant" || doc.role === "user" ? doc.role : "user";
+  const content =
+    typeof doc.content === "string" ? doc.content : JSON.stringify(doc.content);
   return { role, content };
 }
 
@@ -16,7 +18,7 @@ async function buildMessages(sessionId, userMessage) {
   const history = await getSessionMessages(sessionId); // already sorted ascending
   let msgs = history
     .map(normalizeMsg)
-    .filter(m => m.role === "user" || m.role === "assistant");
+    .filter((m) => m.role === "user" || m.role === "assistant");
 
   // Keep only the most recent N messages
   if (msgs.length > MAX_HISTORY_MESSAGES) {
@@ -42,9 +44,7 @@ async function buildMessages(sessionId, userMessage) {
   ];
 }
 
-
-
-async function interact(userMessage,sessionId) {
+async function interact(userMessage, sessionId) {
   // Send conversation request to OpenRouter
   const messages = await buildMessages(sessionId, userMessage);
 
@@ -93,7 +93,7 @@ async function interact(userMessage,sessionId) {
             }
           }
         },
-        max_tokens: 1234
+        max_tokens: 2222
       })
     }
   );
