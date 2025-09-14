@@ -2,7 +2,7 @@
   "name": "chat-with-two-backend",
   "version": "0.1.0-alpha",
   "type": "module",
-  "description": "Chat with  Two! Wow! (Submission for an university assignment)",
+  "description": "Chat with! Wow! (Submission for an university assignment)",
   "main": "index.js",
   "scripts": {
     "start": "node --watch ./src/server.js"
