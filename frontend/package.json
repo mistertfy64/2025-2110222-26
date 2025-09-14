@@ -1,7 +1,7 @@
 {
-  "name": "chat-with-hatsune-miku-frontend",
+  "name": "chat-with-two-frontend",
   "version": "0.1.0-alpha",
-  "description": "Chat with Hatsune Miku! Wow! (Submission for an university assignment)",
+  "description": "Chat with! Wow! (Submission for an university assignment)",
   "main": "index.js",
   "scripts": {
     "start": "node --watch server.js"
