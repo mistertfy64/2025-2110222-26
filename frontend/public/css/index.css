@@ -233,7 +233,7 @@ body {
   background-image: url("../assets/images/self.png");
 }
 .avatar--response {
-  background-image: url("../assets/images/SixBFDI.png");
+  background-image: url("../assets/images/two-profile-picture.webp");
 }
 
 /* sending area */
@@ -294,7 +294,7 @@ body {
   height: 40%;
   z-index: 4;
   background-color: #000000;
-  background-image: url("../assets/images/equation-playground.png");
+  background-image: url("../assets/images/grasslands.webp");
   background-size: cover;
 }
 
