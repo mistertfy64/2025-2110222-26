@@ -2,6 +2,7 @@ const API_BASE =
   window.location.protocol + "//" + window.location.hostname + ":22222";
 
 const SESSIONS_KEY = "two_current_session";
+const SIDEBAR_STATE_KEY = "two_sidebar_collapsed";
 const MAXIMUM_LENGTH = 1024;
 
 // DOM refs
@@ -13,6 +14,7 @@ const sendBtn = document.getElementById("send-message");
 
 let currentSessionId = localStorage.getItem(SESSIONS_KEY) || null;
 let sessionsCache = []; // local cache of sessions list
+let typingIndicatorEl = null; // active typing indicator entry
 
 // Initialization
 async function init() {
@@ -33,6 +35,37 @@ async function init() {
 }
 
 function bindUI() {
+  // Sidebar collapse/expand toggle
+  const sidebar = document.getElementById("sidebar");
+  const toggleBtn = document.getElementById("toggle-sidebar");
+  const characterWrapper = document.getElementById("character-wrapper");
+  const collapsed = localStorage.getItem(SIDEBAR_STATE_KEY) === "1";
+  if (collapsed) {
+    sidebar.classList.add("collapsed");
+    characterWrapper?.classList.add("zoomed");
+    if (toggleBtn) toggleBtn.textContent = "⟩⟩";
+    toggleBtn?.setAttribute("title", "Expand sidebar");
+    toggleBtn?.setAttribute("aria-label", "Expand sidebar");
+  }
+  toggleBtn?.addEventListener("click", () => {
+    const isCollapsed = sidebar.classList.toggle("collapsed");
+    localStorage.setItem(SIDEBAR_STATE_KEY, isCollapsed ? "1" : "0");
+    if (isCollapsed) {
+      characterWrapper?.classList.add("zoomed");
+    } else {
+      characterWrapper?.classList.remove("zoomed");
+    }
+    if (toggleBtn) toggleBtn.textContent = isCollapsed ? "⟩⟩" : "⟨⟨";
+    toggleBtn?.setAttribute(
+      "title",
+      isCollapsed ? "Expand sidebar" : "Collapse sidebar"
+    );
+    toggleBtn?.setAttribute(
+      "aria-label",
+      isCollapsed ? "Expand sidebar" : "Collapse sidebar"
+    );
+  });
+
   newChatBtn.addEventListener("click", async () => {
     await createNewSession();
   });
@@ -254,6 +287,10 @@ async function handleSendClicked() {
     await createNewSession();
   }
 
+  // indicate generating state on character immediately
+  const characterEl = document.getElementById("character");
+  characterEl.classList.add("generating");
+
   // optimistically append user's message
   // console.log("Added new message", message);
   // const messageObject = {
@@ -265,6 +302,8 @@ async function handleSendClicked() {
   addUserMessage(currentSessionId, message);
   // await loadSessions(); // update list (maybe new updatedAt)
   await fetchAndRenderHistory(currentSessionId);
+  // show typing indicator after rendering current history
+  showTypingIndicator();
   console.log("Re Render the chat");
   messageInput.value = "";
   scrollToBottom();
@@ -283,12 +322,20 @@ async function handleSendClicked() {
     }
 
     const data = await res.json();
+    const replyText = data?.reply?.message ?? "";
+    // remove typing indicator before rendering the final reply
+    hideTypingIndicator();
     const emotion = getEmotionClassification(data.reply.emotion);
-    document.getElementById(
-      "character"
-    ).src = `./assets/images/emotions/two-${emotion}.webp`;
+    // swap src
+    characterEl.src = `./assets/images/emotions/two-${emotion}.webp`;
+    // animate appearance
+    characterEl.classList.remove("pop-in");
+    // force reflow to restart animation if same class used consecutively
+    void characterEl.offsetWidth;
+    characterEl.classList.add("pop-in");
 
-    // Prefer to re-fetch full history (keeps UI consistent with server)
+    // Show simulated streaming of the assistant message, then sync history
+    await typewriterAssistantMessage(replyText);
     await loadSessions(); // update list (maybe new updatedAt)
     await fetchAndRenderHistory(currentSessionId);
 
@@ -298,6 +345,10 @@ async function handleSendClicked() {
     console.error("Error sending message:", err);
     alert("Failed to send message. See console.");
   } finally {
+    // ensure typing indicator is gone in any case
+    hideTypingIndicator();
+    // stop generating animation regardless of success
+    characterEl.classList.remove("generating");
     messageInput.disabled = false;
     sendBtn.disabled = false;
   }
@@ -449,6 +500,90 @@ function scrollToBottom() {
   setTimeout(() => {
     messageLog.scrollTop = messageLog.scrollHeight + 200;
   }, 50);
+}
+
+// Lightweight typing indicator with three animated dots
+function showTypingIndicator() {
+  if (typingIndicatorEl) return; // already shown
+
+  const entry = document.createElement("div");
+  entry.classList.add("entry");
+
+  const avatar = createAvatar("response");
+
+  const bubble = document.createElement("article");
+  bubble.classList.add("message", "message--response");
+  const dots = document.createElement("span");
+  dots.classList.add("typing");
+  for (let i = 0; i < 3; i++) {
+    const d = document.createElement("span");
+    d.classList.add("typing__dot");
+    dots.appendChild(d);
+  }
+  bubble.appendChild(dots);
+
+  const time = document.createElement("div");
+  time.classList.add("timestamp--simple");
+  time.innerText = "";
+
+  entry.appendChild(avatar);
+  entry.appendChild(bubble);
+  entry.appendChild(time);
+
+  typingIndicatorEl = entry;
+  messageLog.appendChild(entry);
+  scrollToBottom();
+}
+
+function hideTypingIndicator() {
+  if (typingIndicatorEl && typingIndicatorEl.parentNode) {
+    typingIndicatorEl.parentNode.removeChild(typingIndicatorEl);
+  }
+  typingIndicatorEl = null;
+}
+
+// Simulated streaming: typewriter effect for assistant reply
+function typewriterAssistantMessage(text, opts = {}) {
+  const speed = Math.max(8, Math.min(24, opts.speed || 16)); // ms per tick
+  const chunk = Math.max(1, Math.min(6, opts.chunk || 2));
+
+  return new Promise((resolve) => {
+    const entry = document.createElement("div");
+    entry.classList.add("entry");
+
+    const avatar = createAvatar("response");
+
+    const bubble = document.createElement("article");
+    bubble.classList.add("message", "message--response");
+    const span = document.createElement("span");
+    bubble.appendChild(span);
+
+    const time = createSimpleTimestamp({ createdAt: new Date(), role: "assistant" });
+
+    entry.appendChild(avatar);
+    entry.appendChild(bubble);
+    entry.appendChild(time);
+
+    messageLog.appendChild(entry);
+    scrollToBottom();
+
+    let i = 0;
+    const content = String(text || "");
+    const len = content.length;
+    if (len === 0) {
+      resolve();
+      return;
+    }
+    const timer = setInterval(() => {
+      i = Math.min(len, i + chunk);
+      span.textContent = content.slice(0, i);
+      scrollToBottom();
+      if (i >= len) {
+        clearInterval(timer);
+        resolve();
+      }
+    }, speed);
+  });
 }
 
 function escapeHtml(s) {

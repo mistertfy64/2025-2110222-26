@@ -7,6 +7,7 @@ async function openSessionModificationMenu(sessionID) {
   const dataJSON = await data.json();
   initializeModificationDialog(dataJSON);
   const dialog = document.getElementById("modification-menu");
+  dialog.classList.remove("closing");
   dialog.showModal();
 }
 
@@ -66,7 +67,7 @@ function destroyModificationDialog() {
     .getElementById("modification-menu__close-button")
     .removeEventListener("click", destroyModificationDialog);
   const dialog = document.getElementById("modification-menu");
-  dialog.close();
+  smoothCloseDialog(dialog);
 }
 
 async function openSessionDeletionMenu() {
@@ -78,6 +79,7 @@ async function openSessionDeletionMenu() {
     sessionIDToDelete;
   destroyModificationDialog();
   const dialog = document.getElementById("deletion-menu");
+  dialog.classList.remove("closing");
   dialog.showModal();
   document
     .getElementById("deletion-menu__close-button")
@@ -113,5 +115,17 @@ function destroyDeletionDialog() {
     .removeEventListener("click", destroyDeletionDialog);
   document.getElementById("deletion-menu__session-to-delete").value = "";
   const dialog = document.getElementById("deletion-menu");
-  dialog.close();
+  smoothCloseDialog(dialog);
+}
+
+// Smooth close utility for <dialog>
+function smoothCloseDialog(dialog) {
+  if (!dialog || !dialog.open) return;
+  dialog.classList.add("closing");
+  const onEnd = () => {
+    dialog.classList.remove("closing");
+    dialog.removeEventListener("transitionend", onEnd);
+    dialog.close();
+  };
+  dialog.addEventListener("transitionend", onEnd);
 }
