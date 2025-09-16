@@ -237,6 +237,16 @@ async function addUserMessage(currentSessionId, message) {
     messageInput.disabled = true;
     sendBtn.disabled = true;
 
+    // ✅ Optimistically append user message immediately
+    if (message) {
+      const data = {
+        content: message,
+        role: "user"
+      };
+      appendMessageToLog(data);
+      scrollToBottom();
+    }
+
     // Send request to backend
     const res = await fetch(`${API_BASE}/api/addusermessages`, {
       method: "POST",
@@ -250,15 +260,9 @@ async function addUserMessage(currentSessionId, message) {
 
     const data = await res.json();
 
-    // ✅ Optimistically append user message immediately
-    // if (data.message) {
-    //   appendMessageToLog(data.message);
-    //   scrollToBottom();
-    // }
-
     // 🔄 Re-fetch from server to keep UI consistent
-    await loadSessions();
-    await fetchAndRenderHistory(currentSessionId);
+    // await loadSessions();
+    // await fetchAndRenderHistory(currentSessionId);
 
     // Put cursor back into input box
     messageInput.focus();
@@ -301,9 +305,9 @@ async function handleSendClicked() {
   // appendMessageToLog(messageObject);
   addUserMessage(currentSessionId, message);
   // await loadSessions(); // update list (maybe new updatedAt)
-  await fetchAndRenderHistory(currentSessionId);
+  // await fetchAndRenderHistory(currentSessionId);
   // show typing indicator after rendering current history
-  showTypingIndicator();
+  // showTypingIndicator();
   console.log("Re Render the chat");
   messageInput.value = "";
   scrollToBottom();
@@ -336,8 +340,8 @@ async function handleSendClicked() {
 
     // Show simulated streaming of the assistant message, then sync history
     await typewriterAssistantMessage(replyText);
-    await loadSessions(); // update list (maybe new updatedAt)
-    await fetchAndRenderHistory(currentSessionId);
+    // await loadSessions(); // update list (maybe new updatedAt)
+    // await fetchAndRenderHistory(currentSessionId);
 
     // place cursor back on input
     messageInput.focus();
@@ -558,7 +562,10 @@ function typewriterAssistantMessage(text, opts = {}) {
     const span = document.createElement("span");
     bubble.appendChild(span);
 
-    const time = createSimpleTimestamp({ createdAt: new Date(), role: "assistant" });
+    const time = createSimpleTimestamp({
+      createdAt: new Date(),
+      role: "assistant"
+    });
 
     entry.appendChild(avatar);
     entry.appendChild(bubble);
