@@ -304,9 +304,11 @@ async function handleSendClicked() {
   // };
   // appendMessageToLog(messageObject);
   addUserMessage(currentSessionId, message);
-  // We can then immediately remove the empty state text, as we
+  // We can then immediately remove the empty state text, if it still exists as we
   // already know there is already a message (our first message, from us.)
-  document.getElementsByClassName("empty-state")[0].remove();
+  if (document.getElementsByClassName("empty-state").length > 0) {
+    document.getElementsByClassName("empty-state")[0].remove();
+  }
 
   // await loadSessions(); // update list (maybe new updatedAt)
   // await fetchAndRenderHistory(currentSessionId);
