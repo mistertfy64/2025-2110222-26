@@ -21,7 +21,7 @@ You can even add categorize chats by adding color labels to them!
 <img align="right"  src="./two-profile-picture.png">
 
 ## Setup
-To use this webapp, manual configuration is required for two parts of this web application: the MongoDB database and the OpenRouter API key.
+To use this webapp, manual configuration is required for two parts of this web application: the [MongoDB database](https://www.mongodb.com) and the [OpenRouter API key](https://openrouter.ai).
 After receiving the connection string for the MongoDB database and the token for the OpenRouter API, create a `.env` file in `/backend` with the following content:
 ```
 OPENROUTER_API_KEY=[openrouter api token, without the bearer prefix]
@@ -43,3 +43,6 @@ npm i
 Once complete, start both the frontend and backend. The webapp should now be usable.
 
 The frontend can be accessed through port 2222, while the backend can be accessed through port 22222.
+
+## Accompanying Documents
+Accompanying documents for this project (the report and the video presentation) will be given to the instructors of this course through myCourseVille before or at 11:59PM (UTC) on September 16, 2025. Documents are available for the general public upon request (contact @mistertfy64 and he probably will give it to you).
