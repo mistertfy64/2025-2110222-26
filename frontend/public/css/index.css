@@ -82,7 +82,9 @@ body {
 
 /* Typing indicator (three dots) */
 @keyframes typing-bounce {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: translateY(0);
     opacity: 0.45;
   }
@@ -103,8 +105,12 @@ body {
   background: #5b6970;
   animation: typing-bounce 1.2s infinite ease-in-out;
 }
-.typing__dot:nth-child(2) { animation-delay: 0.15s; }
-.typing__dot:nth-child(3) { animation-delay: 0.3s; }
+.typing__dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.typing__dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
 
 /* Character generating animation: gentle bob + tilt */
 @keyframes two-bob {
@@ -136,11 +142,8 @@ body {
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 0 30px rgba(3, 3, 20, 0.483);
-  transition:
-    width 220ms var(--easing),
-    min-width 220ms var(--easing),
-    opacity 220ms var(--easing),
-    transform 220ms var(--easing);
+  transition: width 220ms var(--easing), min-width 220ms var(--easing),
+    opacity 220ms var(--easing), transform 220ms var(--easing);
 }
 
 .sidebar-header {
@@ -704,5 +707,9 @@ footer {
 
   #conversation-area {
     height: 100vh;
+  }
+
+  body {
+    overflow-y: auto;
   }
 }
