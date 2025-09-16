@@ -191,6 +191,31 @@ body {
   flex: 1;
 }
 
+/* Styled sidebar scrollbar */
+.sidebar-body {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+.sidebar-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.sidebar-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-body::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.28);
+  border-radius: 8px;
+  border: 2px solid transparent; /* creates padding */
+  background-clip: padding-box;
+}
+.sidebar-body:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.45);
+}
+.sidebar-body::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /* Collapsed sidebar */
 #sidebar.collapsed {
   width: 56px;
