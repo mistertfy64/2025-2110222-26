@@ -237,6 +237,16 @@ async function addUserMessage(currentSessionId, message) {
     messageInput.disabled = true;
     sendBtn.disabled = true;
 
+    // ✅ Optimistically append user message immediately
+    if (message) {
+      const data = {
+        content: message,
+        role: "user"
+      };
+      appendMessageToLog(data);
+      scrollToBottom();
+    }
+
     // Send request to backend
     const res = await fetch(`${API_BASE}/api/addusermessages`, {
       method: "POST",
@@ -250,15 +260,9 @@ async function addUserMessage(currentSessionId, message) {
 
     const data = await res.json();
 
-    // ✅ Optimistically append user message immediately
-    // if (data.message) {
-    //   appendMessageToLog(data.message);
-    //   scrollToBottom();
-    // }
-
     // 🔄 Re-fetch from server to keep UI consistent
-    await loadSessions();
-    await fetchAndRenderHistory(currentSessionId);
+    // await loadSessions();
+    // await fetchAndRenderHistory(currentSessionId);
 
     // Put cursor back into input box
     messageInput.focus();
@@ -300,10 +304,16 @@ async function handleSendClicked() {
   // };
   // appendMessageToLog(messageObject);
   addUserMessage(currentSessionId, message);
+  // We can then immediately remove the empty state text, if it still exists as we
+  // already know there is already a message (our first message, from us.)
+  if (document.getElementsByClassName("empty-state").length > 0) {
+    document.getElementsByClassName("empty-state")[0].remove();
+  }
+
   // await loadSessions(); // update list (maybe new updatedAt)
-  await fetchAndRenderHistory(currentSessionId);
+  // await fetchAndRenderHistory(currentSessionId);
   // show typing indicator after rendering current history
-  showTypingIndicator();
+  // showTypingIndicator();
   console.log("Re Render the chat");
   messageInput.value = "";
   scrollToBottom();
@@ -334,10 +344,20 @@ async function handleSendClicked() {
     void characterEl.offsetWidth;
     characterEl.classList.add("pop-in");
 
-    // Show simulated streaming of the assistant message, then sync history
-    await typewriterAssistantMessage(replyText);
-    await loadSessions(); // update list (maybe new updatedAt)
-    await fetchAndRenderHistory(currentSessionId);
+    // Show simulated streaming of the assistant message.
+    const options = {
+      sent: data?.reply?.timings?.sent,
+      forcedThinkingDuration: data?.reply?.timings?.thinkingDuration
+    };
+    await typewriterAssistantMessage(replyText, options);
+
+    // We don't really need to re-"sync" anything here
+    // but we can remove the empty state as a hacky workaround,
+    // because we already know the chat isn't empty anymore.
+    // -mistertfy64
+
+    // await loadSessions(); // update list (maybe new updatedAt)
+    // await fetchAndRenderHistory(currentSessionId);
 
     // place cursor back on input
     messageInput.focus();
@@ -503,6 +523,7 @@ function scrollToBottom() {
 }
 
 // Lightweight typing indicator with three animated dots
+// This function isn't even used it seems...
 function showTypingIndicator() {
   if (typingIndicatorEl) return; // already shown
 
@@ -558,7 +579,14 @@ function typewriterAssistantMessage(text, opts = {}) {
     const span = document.createElement("span");
     bubble.appendChild(span);
 
-    const time = createSimpleTimestamp({ createdAt: new Date(), role: "assistant" });
+    const time = createTimestamp({
+      createdAt: new Date(),
+      role: "assistant",
+      timings: {
+        sent: opts.sent,
+        thinkingDuration: opts.forcedThinkingDuration
+      }
+    });
 
     entry.appendChild(avatar);
     entry.appendChild(bubble);

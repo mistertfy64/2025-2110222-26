@@ -116,7 +116,7 @@ export async function addMessageAndGetReplyHandler(req, res) {
     }
     const sentTimestamp = Date.now();
 
-    const reply = await interact(message,sessionId);
+    const reply = await interact(message, sessionId);
     const replyTimestamp = Date.now();
     await chatService.addMessageToSession(
       sessionId,
@@ -127,6 +127,12 @@ export async function addMessageAndGetReplyHandler(req, res) {
         thinkingDuration: replyTimestamp - sentTimestamp
       }
     );
+
+    // add thinking duration as well
+    reply.timings = {
+      sent: replyTimestamp,
+      thinkingDuration: replyTimestamp - sentTimestamp
+    };
 
     return res.status(200).json({ sessionId, reply });
   } catch (err) {
