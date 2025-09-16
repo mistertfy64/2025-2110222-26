@@ -13,10 +13,13 @@
     <aside id="sidebar">
       <div class="sidebar-header">
         <h1>Chat with Two from BFDI:TPOT!</h1>
-        <button id="new-chat" class="btn">+ New Chat</button>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button id="toggle-sidebar" class="btn" title="Collapse sidebar" aria-label="Collapse sidebar">⟨⟨</button>
+        </div>
       </div>
 
       <div class="sidebar-body">
+        <button id="new-chat" class="btn btn--primary btn--block">+ New Chat</button>
         <h3>Sessions</h3>
         <ul id="sessions-list" class="sessions-list"></ul>
       </div>
