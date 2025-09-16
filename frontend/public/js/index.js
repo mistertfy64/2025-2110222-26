@@ -304,6 +304,10 @@ async function handleSendClicked() {
   // };
   // appendMessageToLog(messageObject);
   addUserMessage(currentSessionId, message);
+  // We can then immediately remove the empty state text, as we
+  // already know there is already a message (our first message, from us.)
+  document.getElementsByClassName("empty-state")[0].remove();
+
   // await loadSessions(); // update list (maybe new updatedAt)
   // await fetchAndRenderHistory(currentSessionId);
   // show typing indicator after rendering current history
@@ -338,8 +342,18 @@ async function handleSendClicked() {
     void characterEl.offsetWidth;
     characterEl.classList.add("pop-in");
 
-    // Show simulated streaming of the assistant message, then sync history
-    await typewriterAssistantMessage(replyText);
+    // Show simulated streaming of the assistant message.
+    const options = {
+      sent: data?.reply?.timings?.sent,
+      forcedThinkingDuration: data?.reply?.timings?.thinkingDuration
+    };
+    await typewriterAssistantMessage(replyText, options);
+
+    // We don't really need to re-"sync" anything here
+    // but we can remove the empty state as a hacky workaround,
+    // because we already know the chat isn't empty anymore.
+    // -mistertfy64
+
     // await loadSessions(); // update list (maybe new updatedAt)
     // await fetchAndRenderHistory(currentSessionId);
 
@@ -507,6 +521,7 @@ function scrollToBottom() {
 }
 
 // Lightweight typing indicator with three animated dots
+// This function isn't even used it seems...
 function showTypingIndicator() {
   if (typingIndicatorEl) return; // already shown
 
@@ -562,9 +577,13 @@ function typewriterAssistantMessage(text, opts = {}) {
     const span = document.createElement("span");
     bubble.appendChild(span);
 
-    const time = createSimpleTimestamp({
+    const time = createTimestamp({
       createdAt: new Date(),
-      role: "assistant"
+      role: "assistant",
+      timings: {
+        sent: opts.sent,
+        thinkingDuration: opts.forcedThinkingDuration
+      }
     });
 
     entry.appendChild(avatar);
