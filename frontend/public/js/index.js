@@ -66,6 +66,42 @@ function bindUI() {
     );
   });
 
+  // Mobile overlay open/close
+  const mobileToggle = document.getElementById("mobile-sidebar-toggle");
+  const scrim = document.getElementById("sidebar-scrim");
+  const openOverlay = () => {
+    document.body.classList.add("sidebar-overlay-open");
+    if (mobileToggle) {
+      mobileToggle.setAttribute("aria-expanded", "true");
+      mobileToggle.setAttribute("aria-label", "Close sidebar");
+      mobileToggle.textContent = "×";
+    }
+  };
+  const closeOverlay = () => {
+    document.body.classList.remove("sidebar-overlay-open");
+    if (mobileToggle) {
+      mobileToggle.setAttribute("aria-expanded", "false");
+      mobileToggle.setAttribute("aria-label", "Open sidebar");
+      mobileToggle.textContent = "☰";
+    }
+  };
+  mobileToggle?.addEventListener("click", () => {
+    if (document.body.classList.contains("sidebar-overlay-open")) {
+      closeOverlay();
+    } else {
+      openOverlay();
+    }
+  });
+  scrim?.addEventListener("click", closeOverlay);
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeOverlay();
+  });
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 992) {
+      closeOverlay();
+    }
+  });
+
   newChatBtn.addEventListener("click", async () => {
     await createNewSession();
   });
@@ -156,6 +192,14 @@ function renderSessionsList() {
 async function selectSession(sessionId) {
   currentSessionId = sessionId;
   localStorage.setItem(SESSIONS_KEY, sessionId);
+  // Close mobile overlay after selecting a session
+  if (window.innerWidth <= 992) {
+    document.body.classList.remove("sidebar-overlay-open");
+    document.getElementById("mobile-sidebar-toggle")?.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+  }
   // update UI active class
   Array.from(document.querySelectorAll(".session-item")).forEach((el) => {
     el.classList.toggle("active", el.dataset.sessionId === sessionId);

@@ -33,6 +33,11 @@ body {
   padding: 12px auto 2px auto;
 }
 
+/* Mobile sidebar toggle hidden by default (desktop) */
+#mobile-sidebar-toggle {
+  display: none;
+}
+
 /* ---------------- Animations / Transitions ---------------- */
 @keyframes fade-in-up {
   from {
@@ -168,6 +173,9 @@ body {
   transition: background-color 160ms var(--easing),
     transform 160ms var(--easing), box-shadow 200ms var(--easing);
 }
+.btn#toggle-sidebar {
+  font-size: 8px; /* make ⟨⟨ / ⟩⟩ larger */
+}
 .btn:hover {
   background: rgba(255, 255, 255, 0.06);
   transform: scale(1.1);
@@ -258,7 +266,7 @@ body {
   flex-direction: column;
   gap: 8px;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0);
   cursor: pointer;
   transition: background-color 160ms var(--easing),
@@ -717,6 +725,9 @@ footer {
 
 /* responsiveness */
 @media screen and (max-width: 992px) {
+  :root {
+    --sidebar-overlay-width: min(80vw, 360px);
+  }
   #app {
     display: flex;
     flex-direction: column-reverse;
@@ -725,16 +736,98 @@ footer {
     padding: 0;
   }
 
-  #sidebar {
-    width: 100%;
-    height: fit-content;
+  /* Off-canvas sidebar overlay */
+  #sidebar,
+  #sidebar.collapsed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-overlay-width);
+    min-width: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    opacity: 1;
+    z-index: 1000;
+    border-radius: 0 24px 24px 0;
+    box-shadow: none; /* prevent shadow peeking when off-canvas */
+  }
+  body.sidebar-overlay-open #sidebar,
+  body.sidebar-overlay-open #sidebar.collapsed {
+    transform: translateX(0);
+    box-shadow: 0 0 30px rgba(3, 3, 20, 0.483); /* restore shadow when visible */
+  }
+
+  /* Ensure content visible even if sidebar has 'collapsed' class */
+  #sidebar.collapsed .sidebar-body {
+    display: block;
+  }
+  #sidebar.collapsed .sidebar-header h1 {
+    display: block;
+  }
+  #sidebar.collapsed .sessions-list {
+    display: flex;
+  }
+  #sidebar.collapsed h3 {
+    display: block;
+  }
+  #sidebar.collapsed #new-chat {
+    display: block;
+  }
+
+  /* Scrim behind the overlay */
+  #sidebar-scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms var(--easing);
+    z-index: 900;
+  }
+  body.sidebar-overlay-open #sidebar-scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Floating toggle button */
+  #mobile-sidebar-toggle {
+    position: fixed;
+    left: 16px;
+    top: max(16px, env(safe-area-inset-top));
+    z-index: 1100;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #ffffff;
+    color: #0b1420;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    cursor: pointer;
+    transition: transform 220ms var(--easing);
+    font-size: 20px; /* bigger ☰ / × icon */
+    line-height: 1;
+  }
+
+  /* Slide the toggle along with the sidebar when open */
+  body.sidebar-overlay-open #mobile-sidebar-toggle {
+    transform: translateX(var(--sidebar-overlay-width));
+  }
+
+  /* Hide desktop toggle on small screens; it's available inside overlay */
+  #toggle-sidebar {
+    display: none;
+  }
+
+  /* Lock background when overlay open */
+  body.sidebar-overlay-open {
+    overflow: hidden;
   }
 
   #conversation-area {
     height: 100vh;
-  }
-
-  body {
-    overflow-y: auto;
   }
 }
