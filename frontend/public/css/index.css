@@ -8,6 +8,16 @@
   --app-bg: #f6f8fa;
   --max-width: 1100px;
   --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Character positioning (adjust as needed) */
+  --character-offset-x: 3vw; /* move right from left edge */
+  --character-offset-y: 0vh;  /* negative moves up */
+  --character-scale: 1;       /* used when sidebar zooms */
+  /* Composer (input area) height used for layout */
+  --composer-height: 88px;
+  /* Chat area right panel width (leave space for character on left) */
+  --chat-area-left-gap: 28vw;
+  /* Fixed chat panel width relative to main chat */
+  --chat-panel-width: clamp(420px, 46vw, 720px);
 }
 
 /* reset / base */
@@ -123,13 +133,13 @@ body {
     transform: translateY(0) rotate(0deg);
   }
   25% {
-    transform: translateY(-8px) rotate(-0.6deg);
+    transform: translateY(-28px) rotate(-0.6deg);
   }
   50% {
     transform: translateY(0) rotate(0deg);
   }
   75% {
-    transform: translateY(-8px) rotate(0.6deg);
+    transform: translateY(-28px) rotate(0.6deg);
   }
   100% {
     transform: translateY(0) rotate(0deg);
@@ -314,7 +324,8 @@ body {
   flex-direction: column;
 }
 #conversation-area {
-  background: white;
+  position: relative;
+  background: transparent;
   border-radius: 32px;
   box-shadow: 0 6px 18px rgba(10, 20, 30, 0.06);
   display: flex;
@@ -323,14 +334,36 @@ body {
   overflow: hidden;
 }
 
-/* message log */
+/* message log overlays the scene */
 #message-log {
-  padding: 18px;
+  position: absolute;
+  left: auto;
+  right: 0;
+  width: min(
+    calc(60%),
+    var(--chat-panel-width)
+  );
+  top: 0; /* reach all the way to the top */
+  bottom: 0; /* extend behind composer */
+  /* Add bottom padding so last messages aren't hidden by the composer */
+  padding: 18px 18px calc(var(--composer-height) + 18px) 18px;
   overflow-y: auto;
-  flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: flex-start; /* left-align inside the right panel */
   gap: 12px;
+  z-index: 5;
+  background: transparent;
+}
+
+/* Center assistant messages; keep self on right */
+#message-log .entry:not(.entry--self) {
+  align-self: flex-end;
+  transform: translate(0, -4vh);
+  max-width: 96%;
+}
+#message-log .avatar--response {
+  display: none;
 }
 
 /* entry: avatar + message + timestamp */
@@ -339,7 +372,7 @@ body {
   flex-direction: row;
   align-items: center;
   gap: 8px;
-  max-width: 80%;
+  max-width: 92%;
   animation: fade-in-up 240ms var(--easing) both;
 }
 
@@ -355,6 +388,7 @@ body {
   border-radius: 20px;
   margin: 0;
   width: fit-content;
+  max-width: 100%;
   line-height: 1.25;
   word-break: break-word;
   box-shadow: 0 2px 25px rgba(10, 20, 30, 0.04);
@@ -432,12 +466,20 @@ body {
   background-repeat: no-repeat;
 }
 
-/* sending area */
+/* sending area overlays at the bottom */
 #sending-area {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--composer-height);
   display: flex;
+  align-items: center;
   gap: 8px;
   padding: 14px;
   border-top: 1px solid #f5f5f5;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.7));
+  z-index: 6;
 }
 #sending-area input[type="text"] {
   flex: 1;
@@ -665,30 +707,34 @@ dialog.closing::backdrop {
   filter: brightness(1.02);
 }
 
-/* character area */
+/* character area fills the scene */
 #character-area {
-  position: unset;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 40%;
-  z-index: 4;
+  height: 100%;
+  z-index: 0;
   background-color: #000000;
   background-image: url("../assets/images/grasslands.webp");
   background-size: cover;
+  background-position: center center;
 }
 
 #character-wrapper {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: end;
+  justify-content: flex-start; /* anchor toward left */
+  align-items: center;         /* vertical middle */
+  padding-left: var(--character-offset-x);
+  transform: translateY(var(--character-offset-y)) scale(var(--character-scale));
   transform-origin: center bottom;
   transition: transform 220ms var(--easing);
 }
 
 #character {
   width: auto;
-  height: 80%;
+  height: 32vh;
   user-select: none;
   -webkit-user-drag: none;
   will-change: transform, opacity;
@@ -707,7 +753,7 @@ dialog.closing::backdrop {
 
 /* Zoom the character when sidebar is collapsed */
 #character-wrapper.zoomed {
-  transform: scale(1.08);
+  --character-scale: 1.08;
 }
 
 /* Ensure background stays centered when area grows */
